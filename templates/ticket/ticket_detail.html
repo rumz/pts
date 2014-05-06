@@ -6,9 +6,16 @@
 	<h5>Description:</h5>
 	<h5><textarea readonly id="pad" style="height: 200px; width: 470px; max-height: 200px; 
         min-width: 470px; max-width: 470px" name="description"  >{{ticket.description}}</textarea></h5>
-    {% for ticket_age in ticket_age %}
-       <h5>Time age: {{ticket_age.hours}}</h5>
-    {% endfor %}
+    {% ifequal ticket.created.year  datetime.year%}
+        {% ifequal ticket.created|date:'M d'  datetime|date:'M d'%}
+            <h5>Ticket date created: <b> Today at {{ticket.created.time}} </b></h5>
+        {% else %}
+            <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created.time}}</b></h5> 
+        {% endifequal %}
+    {% else %}
+        <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created.time}}</b></h5> 
+    {% endifequal %}
+    <h5>Ticket age: <b> {{ticket_age}}</b></h5>
    
     <h5>Assign User:<b> {{ticket.assign_user.get_full_name}}</b></h5>
     <h5>Category: <b>{{ticket.category}}</b> </h5>

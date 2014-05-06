@@ -18,7 +18,8 @@ from tickets.views import (
     tickets_assign,
     tickets_request,
     upload,
-    edit_ticket
+    edit_ticket,
+    about
 	)
 # CategoryList, , about, user_login,
 
@@ -41,6 +42,7 @@ urlpatterns = patterns('',
     url(r'^requester_tickets/(?P<pk>\d+)/$',tickets_request),
     url(r'^ticketdetailed/(?P<pk>\d+)/upload/$',upload),
     url(r'^profile/(?P<pk>\d+)/$',view_profile),
+    url(r'about$',about),
     url(r'^logout/$',logout)
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
