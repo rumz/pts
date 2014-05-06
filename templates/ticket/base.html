@@ -1,0 +1,13 @@
+{% extends 'system_base.html' %}
+{% load bootstrap3 %}
+
+{% block navbar_li %}
+	
+	<li class="active" ><a href="/"><font color="#FFF">Home</font> </a></li>
+	<li ><a href="/request/"><font color="#FFF">Requests</font> </a></li>
+	<li><a href="/notification/"><span class="badge pull-right">{{count}}</span><font color="#FFF">Notification</font></a></li>
+	<li><a href="/openticket/"><font color="#FFF">Open Ticket</font></a></li>
+	
+	
+{% endblock %}
+

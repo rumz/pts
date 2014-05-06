@@ -1,0 +1,65 @@
+{% extends './ticket/base.html' %}
+
+{% block content %}
+
+<div style="width: 50%; ">
+	<form method="GET" class="form-search" action="search_ticket"> {% csrf_token %}
+	
+	  <div class="input-group">
+		<div class="input-group-addon">
+			<select name="ticket_search_filters" id="ticket_search_filters" type="radio" >
+				{% for cat in Category %}
+					<option value="{{cat.id}}"/>{{cat.name}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<input name='seach_ticket' type="text" class="form-control" placeholder="Search">
+		<span class="input-group-btn">
+			<button id="but" class="btn btn-success" type="submit">
+				<span class="glyphicon glyphicon-search"></span>
+			</button>
+		</span>
+	  </div><!-- /btn-group -->
+    </form>
+</div >
+<div style="height:500px;overflow:auto;">
+	
+  <table class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th>Subject</th>
+			<th>Category</th>
+			<th>Assign User</th>
+			<th>Requester</th>
+			<th>Created</th>
+			<th>Age</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for ticket in Ticket %}
+			
+		 	<tr >
+		 		<td class="td_width">
+		 		 	
+		 			<a href="/ticketdetailed/{{ticket.id}}/">{{ ticket.subject }}</a>
+		 		</td>
+		 		<td class="td_width">
+		 		<a href="#">{{ticket.category}}</a>
+		 		</td>
+		 		<td class="td_width">
+		 		<a href="/assign_tickets/{{ticket.assign_user.id}}/"> {{ticket.assign_user.get_full_name}}</a>
+		 		</td>
+		 		<td class="td_width">
+		 		<a href="/requester_tickets/{{ticket.user_requestor.id}}/"> {{ticket.user_requestor.get_full_name}}</a>
+		 		</td>
+		 		<td class="td_width">
+		 		<a href="#">{{ticket.created}}</a>
+		 		</td>
+		 		<td class="td_width" >{{ticket.days}} &nbsp; days</td>
+		 	</tr>
+  		{% endfor %}
+	</tbody>
+  </table>
+</div>
+
+{% endblock %}

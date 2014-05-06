@@ -1,0 +1,33 @@
+<div>
+<br>
+<form method="POST" id='ticket_edit'  action="/edit_ticket/{{ticket.id}}/"> {% csrf_token %}
+	{% if ticket %}
+	<h5>Subject:<b> {{ticket.subject}}</b></h5s>
+	<h5>Description:</h5>
+	<h5><textarea readonly id="pad" style="height: 200px; width: 470px; max-height: 200px; 
+        min-width: 470px; max-width: 470px" name="description"  >{{ticket.description}}</textarea></h5>
+    {% for ticket_age in ticket_age %}
+       <h5>Time age: {{ticket_age.hours}}</h5>
+    {% endfor %}
+   
+    <h5>Assign User:<b> {{ticket.assign_user.get_full_name}}</b></h5>
+    <h5>Category: <b>{{ticket.category}}</b> </h5>
+    <h5>Requester: <b>{{ticket.user_requestor.get_full_name}}</b> </h5>
+    {% if ticket.status%}
+    	<h5>Status:<b> Open</b> </h5>
+    {% else %}
+    	<h5>Status: <b> Closed </b> </h5>
+    {% endif %}
+	{% endif %}
+		<div id="pad">
+		<br>
+        	<button type="submit" class="btn btn-success">Edit</button> &nbsp;
+        	{% if com_button %}
+        	 <button  type="button" id="add_bill_button" data-toggle="modal" data-target="#add_bill" class="btn btn-success">Add Comment</button>
+        	{% endif %}
+
+     </div>
+</form>
+ <br>
+    <h4 >Comments:</h4>
+</div>

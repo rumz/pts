@@ -1,0 +1,19 @@
+{% extends 'ticket/base.html' %}
+
+{% block content %}
+{% if open %}
+	{% include 'ticket/ticket_open.html' %}	
+{% else %}
+ 
+ <div>
+ 
+  <div id="d">
+	{% include 'ticket/ticket_detail.html' %}
+	
+   </div>
+ {% include 'ticket/attach.html' %}
+</div>
+
+{% include 'ticket/ticket_detail_comment.html' %}
+{% endif %}
+{% endblock %}

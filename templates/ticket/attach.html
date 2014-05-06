@@ -1,0 +1,25 @@
+<div id="l">
+		<!-- List of uploaded documents -->
+		<br>
+		{% if documents %}
+			<div style="overflow: auto; height: 260px;">
+			{% for document in documents %}
+				<li ><a href="{{ document.docfile.url }}">{{ document.name }}  </a> uploaded on {{document.created}} by {{document.user.first_name}} {{document.user.last_name}} </li>
+			{% endfor %}
+			</div>
+		{% else %}
+			<p>No documents.</p>
+		{% endif %}
+
+		<!-- Upload form. Note enctype attribute! -->
+		<form  action="/ticketdetailed/{{ticket.id}}/upload/" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+		<!-- 	<p>{{ form.non_field_errors }}</p>
+			<p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p> -->
+			
+				{{ form.docfile.errors }}
+				{{ form.docfile }}
+			<br>
+			<input class="btn btn-success" type="submit" value="Upload" />
+		</form>
+		
+</div>

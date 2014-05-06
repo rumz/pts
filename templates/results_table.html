@@ -1,0 +1,32 @@
+ <table class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th>Subject</th>
+			<th>Category</th>
+			<th>User</th>
+			<th>requester</th>
+			<th>created</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for ticket in Ticket %}
+		 	<tr >
+		 		<td class="td_width">
+		 			<a href="#">{{ ticket.subject }}</a>
+		 		</td>
+		 		<td class="td_width">
+		 		<a href="#">{{ticket.category}}</a>
+		 		</td>
+		 		<td class="td_width">
+		 		<a href="#">{{ticket.user.last_name}} &nbsp; {{ticket.user.first_name}}</a>
+		 		</td>
+		 		<td class="td_width">
+		 		<a href="#">{{user.first_name}}</a>
+		 		</td>
+		 		<td class="td_width">
+		 		<a href="#">{{ticket.created}}</a>
+		 		</td>
+		 	</tr>
+  		{% endfor %}
+	</tbody>
+  </table>

@@ -1,0 +1,33 @@
+{% extends 'ticket/base.html' %}
+
+{% block content %}
+<div>
+	<table class="table table-hover table-condensed">
+		<thead>
+			<th>Subject</th>
+			<th>Description</th>
+			<th>Date Created</th>
+		</thead>
+		<tbody>
+			{% for ticket in ticket %}
+			<tr>
+			  {% if ticket.flag == True %}
+				
+				<td><a href="/ticketdetailed/{{ticket.id}}/"><font color="red" >{{ticket.subject}}</font></a></td>
+				<td><font color="red" >{{ticket.description}}</font></td>
+				<td><font color="red" >{{ticket.created}}</font></td>
+			  {% else %}
+			    <td><a href="/ticketdetailed/{{ticket.id}}/">{{ticket.subject}}</a></td>
+				<td>{{ticket.description}}</td>
+				<td>{{ticket.created}}</td>	
+
+			  {% endif %}
+			</tr>
+
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+	
+{% endblock %}

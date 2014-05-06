@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  
+	<link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css" />
+  <link href="/static/css/bootstrap.theme.css" rel="stylesheet" type="text/css" />
+  <link href="/static/css/bootstrap.theme.min.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/pis_base.css" rel="stylesheet" type="text/css" />
+	
+	<title>
+		{%block title%}{%endblock%}
+	</title>
+</head>
+
+<body>
+	<header>
+		{%block header%}
+			<h4 style="color: #FFF; padding-top:12px">{{system_name}}</h4>
+		{%endblock%}
+	</header>	
+	<div class="super"  style="{%block superdiv_style%}{%endblock%}">		
+		{%block content%}{%endblock%}
+	</div> <!--end of super div-->
+	{%block footer%}
+		<footer>
+			<h4 style="float:left">PHILHEALTH REGIONAL OFFICE ARMM</h4>
+     </footer>
+	{%endblock%}
+	
+	<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/static/js/comment-ajax.js"></script>
+
+</body>
+
+</html>

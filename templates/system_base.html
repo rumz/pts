@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+	{{system_name}} - Home
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block superdiv_style %}
+{%endblock%}
+
+{% block header %}
+	<nav role="navigation" >
+	<div class="container-fluid">
+		
+		<div class="navbar-header">
+			<a  class="navbar-brand" href="#"> <font color="#FFF"> {{system_name}} </font></a>
+		</div>
+	
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+			{% block navbar_li %}{% endblock %}
+			</ul>
+			
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="/profile/{{user.id}}/" class="navbar-link"> <font color="#FFF">{{ user.get_full_name }} &nbsp;|&nbsp; {{ user.username }}</a></font> </li>
+				<li>
+					<div class="btn-group">
+						<button type="button" class="btn btn-inverse navbar-btn dropdown-toggle" data-toggle="dropdown">
+							<span class="glyphicon glyphicon-cog"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="#">Settings</a></li>
+							<li><a href="/profile/{{user.id}}/" >Profile</a></li>
+							<li><a href="#">Something else here</a></li>
+							<li class="divider"></li>
+							<li>     
+							  
+								<a href="/logout/">Logout</a>
+							  
+      						</li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+{% endblock %}

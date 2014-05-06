@@ -1,0 +1,49 @@
+<div class="modal fade" id="add_bill" tabindex="-1" role="dialog"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:rgba(40, 40, 40, 1); color:#FFF">
+        <button onclick="javascript:clearComment()" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="confirmLabel">Add Comment:</h4>
+      </div>
+      <div class="modal-body">
+    <form method="GET" class="form-search" enctype="multipart/form-data" >{% csrf_token %}
+      <div>
+        <textarea id="comments" style="height: 130px; width: 555px; max-height: 130px; 
+        min-width: 555px; max-width: 555px" name="comments"  ></textarea>
+      </div>
+      <div class="modal-footer">
+     
+        
+        <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="javascript:clearComment()">Cancel</button>
+        <button type="submit" data-dismiss="modal" data-target="success" class="btn btn-primary"  onclick="javascript:getComment({{ ticket.id }})" >Submit</button>
+      </div>
+
+      </form>
+
+       </div>
+      
+    </div>
+  </div>
+
+</div>
+
+<div >
+<div style="width: 100%; height: 600px; overflow: auto; background-color: white; clear:both" >
+
+    <table  id='com_list' style="margin-right: 40px; margin-left: 40px;">
+      {% for comment in Comment %}
+        <tr><td>&nbsp;</td></tr>
+        <tr>
+            <td> <font color="#0747E4">{{comment.user.first_name}}&nbsp;{{comment.user.last_name}} </font> <font style="float: right;">{{comment.created}}</font></td>
+            
+        </tr>
+        <tr>
+            <td><pre style="width: 600px;"> {{comment.comment}}</pre></td>
+
+        </tr>
+        
+
+      {% endfor %}    
+    </table>
+</div>
+</div>

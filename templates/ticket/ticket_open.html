@@ -1,0 +1,88 @@
+<form method="POST" id='ticket_add'  action="/save"> {% csrf_token %}
+	<input type="hidden" id="ticket_edit" name="ticket_edit" value="{{ticket.id}}" >
+	<br>
+	  <div>
+			<h5>Subject:&nbsp;<input style="width: 425px; height: 28px; " id='ticket_subject' name="ticket_subject" type="text" value="{{ticket.subject}}" ></h5>
+
+		</div>
+		<div>
+			<h5>Description:&nbsp;</h5>
+			<textarea id="pad" style="height: 200px; width: 480px; max-height: 200px; 
+        min-width: 480px; max-width: 480px" name="description"  >{{ticket.description}}</textarea>
+	
+		</div>
+		<div>
+		<table id="pad">
+			<tr>
+				<td>Assign User:&nbsp;</td>
+				<td>
+					<select name="user_choose" id="user_choose"  type="radio" >
+					  {% for user in Users %}
+					    {% if ticket.assign_user_id == user.id %}
+						<option  value="{{user.id}}" selected>{{user.get_full_name}} </option>
+					
+						{% else %}
+						<option  value="{{user.id}}">{{user.get_full_name}} </option>
+						{% endif %}
+					  {% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Category:&nbsp;</td>
+				<td>
+					<select id="category_choose" name="category_choose" type="radio" >
+					  {% for cat in Category %}
+					  	{%if ticket.category_id == cat.id %}
+						<option value="{{cat.id}}" selected >{{cat.name}}</option>
+						
+						{% else %}
+						<option value="{{cat.id}}">{{cat.name}}</option>
+						{% endif %}
+					  {% endfor %}
+					</select >
+				</td>
+			</tr>
+			<tr>
+				<td>Requestor:</td>
+				<td>
+					<select id="requestor_choose" name="requestor_choose" type="radio" >
+					  {% for user in Users %}
+					    {% if ticket.user_requestor_id == user.id %}
+						<option value="{{user.id}}"  selected >{{user.get_full_name}}  </option>
+					
+						{% else %}
+						<option value="{{user.id}}">{{user.get_full_name}}  </option>
+						{% endif %}
+					  {% endfor %}
+					</select>			
+				</td>
+			</tr>
+			<tr>
+				<td>Status:</td>
+				<td>
+					<select id="status_choose" name="status_choose" type="radio" >
+						{% if ticket.status %}
+							<option value="Open" selected  >Open
+							<option value="Close" >Close
+						{% else %}
+							<option value="Close" >Close
+							<option value="Open" >Open
+						{% endif %}
+						
+					</select>			
+				</td>
+			</tr>
+		</table>
+		</div>
+		
+		<div id="pad">
+		<br>
+        	<button type="submit" class="btn btn-success">Save</button> &nbsp;<!-- 
+        	{% if com_button %}
+        	 <button  type="button" id="add_bill_button" data-toggle="modal" data-target="#add_bill" class="btn btn-success">Add Comment</button>
+        	{% endif %} -->
+
+     </div>
+    </form>
+

@@ -1,0 +1,21 @@
+{% extends './ticket/base.html' %}
+
+{% block content %}
+<ul id="stud_info" type="none" style="margin-left:10px;  background:rgba(0,0,0,.1)">
+	
+	<li  style="float:left">
+		
+		    <img src="{{MEDIA_URL}}{{employee.image_path}}" width="100px" height="100px">
+		
+	</li>
+	<li style="margin-left:105px">
+		<ul  class="plate" type="none">
+			
+			<li>{{employee.user.first_name}}&nbsp;{{employee.user.last_name}} </li>
+			<li>{{employee.user.username}}</li>
+			<li>{{employee.department}}</li>
+	  	    <li>{{employee.position}}</li>
+	    </ul>
+  </li>
+</ul>	
+{% endblock %}

@@ -1,0 +1,14 @@
+
+    <table  id='com_list' style="margin-right: 40px; margin-left: 40px;">
+      {% for comment in Comment %}
+        <tr><td>&nbsp;</td></tr>
+        <tr>
+            <td> <font color="#0747E4">{{comment.user.first_name}}&nbsp;{{comment.user.last_name}}  </font><font style="float: right;">{{comment.created}}</font> </td>
+        </tr>
+        <tr>
+            <td><pre style="width: 600px;"> {{comment.comment}}</pre></td>
+
+        </tr>
+
+      {% endfor %}    
+    </table>
