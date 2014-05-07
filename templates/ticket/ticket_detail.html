@@ -4,16 +4,24 @@
 	{% if ticket %}
 	<h5>Subject:<b> {{ticket.subject}}</b></h5s>
 	<h5>Description:</h5>
-	<h5><textarea readonly id="pad" style="height: 200px; width: 470px; max-height: 200px; 
-        min-width: 470px; max-width: 470px" name="description"  >{{ticket.description}}</textarea></h5>
+	<h5><pre style="background-color: white;">{{ticket.description}}</pre></h5>
     {% ifequal ticket.created.year  datetime.year%}
         {% ifequal ticket.created|date:'M d'  datetime|date:'M d'%}
-            <h5>Ticket date created: <b> Today at {{ticket.created.time}} </b></h5>
+                <h5>Ticket date created: <b> {{ticket.created|timesince}} ago  </b></h5>
         {% else %}
-            <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created.time}}</b></h5> 
+            {% ifequal ticket.created|date:'a' 'a.m.'%}
+                <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am</b></h5> 
+            {% else %}
+                <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}pm</b></h5>
+            {% endifequal %}
+            
         {% endifequal %}
     {% else %}
-        <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created.time}}</b></h5> 
+        {% ifequal ticket.created|date:'a' 'a.m.'%}
+            <h5>Ticket date created: <b> {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am</b></h5> 
+        {% else %}
+            <h5>Ticket date created: <b> {{ticket.created.date}} at {{ticket.created|date:'h:m'}}pm</b></h5> 
+        {% endifequal %}
     {% endifequal %}
     <h5>Ticket age: <b> {{ticket_age}}</b></h5>
    
@@ -30,11 +38,17 @@
 		<br>
         	<button type="submit" class="btn btn-success">Edit</button> &nbsp;
         	{% if com_button %}
-        	 <button  type="button" id="add_bill_button" data-toggle="modal" data-target="#add_bill" class="btn btn-success">Add Comment</button>
-        	{% endif %}
+        	 <button  type="button" id="add_bill_button" data-toggle="modal" data-target="#add_bill" class="btn btn-success">Add Comment</button> &nbsp; 
+             {% if ticket.status%}
+                <a class="btn btn-success" href="/close_status_ticket/{{ticket.id}}/">Close Ticket</a>
+             {% else %}
+                <a class="btn btn-success" href="/open_status_ticket/{{ticket.id}}/">Open Ticket</a>
+        	 {% endif %}
+            {% endif %}
 
      </div>
-</form>
  <br>
     <h4 >Comments:</h4>
+</form>
+
 </div>

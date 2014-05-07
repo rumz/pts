@@ -37,14 +37,25 @@
             <td> <font color="#0747E4">{{comment.user.first_name}}&nbsp;{{comment.user.last_name}} </font> <font style="float: right;">
             {% ifequal comment.created.year datetime.year%}
               {% ifequal comment.created|date:'M d'  datetime|date:'M d'%}
-                Today at {{comment.created.time}}</font></td>
+                  {{comment.created|timesince}} ago
               {% else %}
-                <font style="float: right;">{{comment.created|date:'M d'}} at {{comment.created.time}}</font>
+                  {% ifequal comment.created|date:'a' 'a.m.' %}
+                      {{comment.created|date:'M d'}} at {{comment.created|date:'h:m'}}am     
+                  {% else %}
+                      {{comment.created|date:'M d'}} at {{comment.created|date:'h:m'}}pm>
+                  {% endifequal %}
               {% endifequal %}             
 
             {% else %}
-              <font style="float: right;">{{comment.created}}</font>              
+                  {% ifequal comment.created|date:'a' 'a.m.' %}
+                      {{comment.created.date}} at {{comment.created|date:'h:m'}}am     
+                  {% else %}
+                      {{comment.created.date}} at {{comment.created|date:'h:m'}}am  
+                  {% endifequal %}
+                      
             {% endifequal %}
+            </font>
+            </td>
         </tr>
         <tr>
             <td><pre style="width: 600px;"> {{comment.comment}}</pre></td>

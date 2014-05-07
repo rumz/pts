@@ -19,7 +19,9 @@ from tickets.views import (
     tickets_request,
     upload,
     edit_ticket,
-    about
+    about,
+    close_status_ticket,
+    open_status_ticket
 	)
 # CategoryList, , about, user_login,
 
@@ -42,6 +44,8 @@ urlpatterns = patterns('',
     url(r'^requester_tickets/(?P<pk>\d+)/$',tickets_request),
     url(r'^ticketdetailed/(?P<pk>\d+)/upload/$',upload),
     url(r'^profile/(?P<pk>\d+)/$',view_profile),
+    url(r'^close_status_ticket/(?P<pk>\d+)/$',close_status_ticket),
+    url(r'^open_status_ticket/(?P<pk>\d+)/$',open_status_ticket),
     url(r'about$',about),
     url(r'^logout/$',logout)
 
