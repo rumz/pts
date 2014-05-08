@@ -11,7 +11,7 @@
                   {% ifequal comment.created|date:'a' 'a.m.' %}
                       {{comment.created|date:'M d'}} at {{comment.created|date:'h:m'}}am     
                   {% else %}
-                      {{comment.created|date:'M d'}} at {{comment.created|date:'h:m'}}pm>
+                      {{comment.created|date:'M d'}} at {{comment.created|date:'h:m'}}pm
                   {% endifequal %}
               {% endifequal %}             
 

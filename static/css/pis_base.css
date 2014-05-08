@@ -56,8 +56,9 @@ ul{
 
 .td_width{
 	width: 70px;
-	overflow: hidden;
+	height: 10px;
 
+	overflow: hidden;
 }
 .tr_height{
 	height: 10px;
@@ -110,10 +111,36 @@ footer{
 	margin-top: 50px;
 }
 
+.fixed,
+table.fixed { table-layout:fixed; }
+
+.overflow-sm,
+tr.overflow-sm,
+th.overflow-sm,
+td.overflow-sm {
+  overflow: hidden;
+}
+
+.table-striped-green > tbody > tr:nth-child(odd) > td,
+.table-striped-green > tbody > tr:nth-child(odd) > th {
+  background-color: #dff0d8;
+}
 
 
+.table-striped-green > tbody > tr:nth-child(even) > td,
+.table-striped-green > tbody > tr:nth-child(even) > th {
+  background-color: #f9f9f9;
+}
 
+.description { max-width: 500px; }
+.subject { max-width: 280px; }
+.date_created { max-width: 250px; }
+.age  { max-width: 150px; }
+.user  { max-width: 230px; }
+div.concat{ overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; white-space: nowrap; width: inherit; }
 
+/*th, a{
+	 background-color: Fuchsia;
+}
 
-
-
+*/

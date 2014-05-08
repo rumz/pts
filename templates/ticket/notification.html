@@ -2,24 +2,68 @@
 
 {% block content %}
 <div>
-	<table class="table table-hover table-condensed">
+
+
+	<table   class=" table table-hover table-condensed table-striped-green">
 		<thead>
-			<th>Subject</th>
-			<th>Description</th>
-			<th>Date Created</th>
+			<th class="col-xs-6 col-sm-3 " ><a href=""> Subject</a></th>
+			<th class="col-xs-6 col-sm-3 ">Description</th>
+			<th class="col-xs-6 col-sm-3 ">Date Created</th>
 		</thead>
 		<tbody>
 			{% for ticket in ticket %}
-			<tr>
+
+			<tr >
 			  {% if ticket.flag == True %}
 				
-				<td><a href="/ticketdetailed/{{ticket.id}}/"><font color="red" >{{ticket.subject}}</font></a></td>
-				<td><font color="red" >{{ticket.description}}</font></td>
-				<td><font color="red" >{{ticket.created}}</font></td>
+				<td ><div class="concat subject"><a href="/ticketdetailed/{{ticket.id}}/"><font color="red" >{{ticket.subject}}</font></a></div></td>
+				<td  ><div class="concat description"><font color="red" >{{ticket.description}}</font></div></td>
+				<td  ><div class="concat date_created"><font color="red" >
+		 				{% ifequal ticket.created.year datetime.year%}
+              				{% ifequal ticket.created|date:'M d'  datetime|date:'M d'%}
+                  				{{ticket.created|timesince}} ago
+              				{% else %}
+                  				{% ifequal ticket.created|date:'a' 'a.m.' %}
+                      				{{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am     
+                  				{% else %}
+                      				{{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}pm
+                  				{% endifequal %}
+              				{% endifequal %}             
+
+            			{% else %}
+                  			{% ifequal ticket.created|date:'a' 'a.m.' %}
+                      			{{ticket.created.date}} at {{ticket.created|date:'h:m'}}am     
+                  			{% else %}
+                      			{{ticket.created.date}} at {{ticket.created|date:'h:m'}}am  
+                  			{% endifequal %}
+                      
+            			{% endifequal %}
+				</font></div></td>
 			  {% else %}
-			    <td><a href="/ticketdetailed/{{ticket.id}}/">{{ticket.subject}}</a></td>
-				<td>{{ticket.description}}</td>
-				<td>{{ticket.created}}</td>	
+			    <td  ><div class="concat subject"><a href="/ticketdetailed/{{ticket.id}}/">{{ticket.subject}}</a></div></td>
+				<td ><div class="concat description" >{{ticket.description}}</div></td>
+				<td  ><div class="concat date_created">
+				{% ifequal ticket.created.year datetime.year%}
+              {% ifequal ticket.created|date:'M d'  datetime|date:'M d'%}
+                  {{ticket.created|timesince}} ago
+              {% else %}
+                  {% ifequal ticket.created|date:'a' 'a.m.' %}
+                      {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am     
+                  {% else %}
+                      {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}pm>
+                  {% endifequal %}
+              {% endifequal %}             
+
+            {% else %}
+                  {% ifequal ticket.created|date:'a' 'a.m.' %}
+                      {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am     
+                  {% else %}
+                      {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am  
+                  {% endifequal %}
+                      
+            {% endifequal %}
+
+				<div></div></td>	
 
 			  {% endif %}
 			</tr>
