@@ -108,35 +108,37 @@ def save_ticket(request):
          c.save()  
          return HttpResponseRedirect('/')
     else:
-       if Ticket.objects.filter(id=ticket_edit).exists():
-        ticket = Ticket.objects.get(id=ticket_edit)
-        if ticket.subject != subjects:
-          c = Comment(comment='Edited Subject "'+ subjects + '" ', user_id = created_user, ticket_id=ticket.id)
-          Ticket.objects.filter(id=ticket_edit).update(subject=subjects, flag=True)
-          c.save()
-        if ticket.description != description:
-          c = Comment(comment='Edited Description "'+ description+ '" ', user_id = created_user, ticket_id=ticket.id)
-          Ticket.objects.filter(id=ticket_edit).update(description=description, flag=True)
-          c.save()
-        if ticket.user_requestor_id != int(requestor):
-          user = User.objects.get(id=requestor)
-          c = Comment(comment='Requestor "'+ user.get_full_name() + '" ', user_id = created_user, ticket_id=ticket.id)
-          Ticket.objects.filter(id=ticket_edit).update(user_requestor=requestor, flag=True)
-          c.save()
-        if ticket.category_id != int(category):
-          cat = Category.objects.get(id=category)
-          c = Comment(comment='Edited Category "'+ cat.name + '" ', user_id = created_user, ticket_id=ticket.id)
-          Ticket.objects.filter(id=ticket_edit).update(category=category, flag=True)
-          c.save()  
-        if ticket.assign_user_id != int(assign_user):
-          user = User.objects.get(id=assign_user)
-          TicketAge.objects.filter(ticket_id=ticket_edit).update(modified=datetime.datetime.now(), done=False)
-          t=TicketAge(assign_user_id=assign_user,ticket_id=ticket_edit, done=True)
-          t.save()
-          c = Comment(comment='Assigned User "'+ user.get_full_name() + '" ', user_id = created_user, ticket_id=ticket.id)
-          Ticket.objects.filter(id=ticket_edit).update(assign_user=assign_user, flag=True)
-          c.save()
-
+        if Ticket.objects.filter(id=ticket_edit).exists():
+            ticket = Ticket.objects.get(id=ticket_edit)
+            comments=''
+            if ticket.subject != subjects:
+                comments = 'Edited Subject "'+ subjects + '" \n\n '
+                Ticket.objects.filter(id=ticket_edit).update(subject=subjects, flag=True)
+                
+            if ticket.description != description:
+                comments += 'Edited Description "'+ description+ '" \n\n '
+                Ticket.objects.filter(id=ticket_edit).update(description=description, flag=True)
+                 
+            if ticket.user_requestor_id != int(requestor):
+                user = User.objects.get(id=requestor)
+                comments += 'Requestor "'+ user.get_full_name() + '" \n\n '
+                Ticket.objects.filter(id=ticket_edit).update(user_requestor=requestor, flag=True)
+                
+            if ticket.category_id != int(category):
+                cat = Category.objects.get(id=category)
+                comments += 'Edited Category "'+ cat.name + '" \n\n '
+                Ticket.objects.filter(id=ticket_edit).update(category=category, flag=True)
+                  
+            if ticket.assign_user_id != int(assign_user):
+                user = User.objects.get(id=assign_user)
+                TicketAge.objects.filter(ticket_id=ticket_edit).update(modified=datetime.datetime.now(), done=False)
+                t=TicketAge(assign_user_id=assign_user,ticket_id=ticket_edit, done=True)
+                t.save()
+                comments += 'Assigned User "'+ user.get_full_name() + '" '
+                Ticket.objects.filter(id=ticket_edit).update(assign_user=assign_user, flag=True)
+                
+            c = Comment(comment= comments, user_id = created_user, ticket_id=ticket.id)
+            c.save()
         return HttpResponseRedirect('/ticketdetailed/'+ticket_edit+'/')
      
 @login_required(login_url='/')
