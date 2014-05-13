@@ -120,12 +120,17 @@ th.overflow-sm,
 td.overflow-sm {
   overflow: hidden;
 }
-
+th[data-sort]{
+      cursor:pointer;
+    }
+/*th{
+	background-color: #dff0d8;
+	
+}*/
 .table-striped-green > tbody > tr:nth-child(odd) > td,
 .table-striped-green > tbody > tr:nth-child(odd) > th {
   background-color: #dff0d8;
 }
-
 
 .table-striped-green > tbody > tr:nth-child(even) > td,
 .table-striped-green > tbody > tr:nth-child(even) > th {
@@ -134,11 +139,26 @@ td.overflow-sm {
 
 .description { max-width: 500px; }
 .subject { max-width: 280px; }
-.date_created { max-width: 250px; }
-.age  { max-width: 150px; }
-.user  { max-width: 230px; }
+.date_created { max-width: 180px; }
+.age  { max-width: 100px; }
+.user  { max-width: 200px; }
 div.concat{ overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; white-space: nowrap; width: inherit; }
 
+.headerSortDown:after,
+.headerSortUp:after{
+    content: ' ';
+    position: relative;
+    left: 10px;
+    border: 8px solid transparent;
+}
+.headerSortDown:after{
+    top: 10px;
+    border-top-color: silver;
+}
+.headerSortUp:after{
+    bottom: 15px;
+    border-bottom-color: silver;
+}
 /*th, a{
 	 background-color: Fuchsia;
 }

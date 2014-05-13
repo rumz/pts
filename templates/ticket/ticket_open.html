@@ -17,6 +17,7 @@
 				<td>Assign User:&nbsp;</td>
 				<td>
 					<select name="user_choose" id="user_choose"  type="radio" >
+					<option  value="blank" > </option>
 					  {% for user in Users %}
 					    {% if ticket.assign_user_id == user.id %}
 						<option  value="{{user.id}}" selected>{{user.get_full_name}} </option>
@@ -35,7 +36,6 @@
 					  {% for cat in Category %}
 					  	{%if ticket.category_id == cat.id %}
 						<option value="{{cat.id}}" selected >{{cat.name}}</option>
-						
 						{% else %}
 						<option value="{{cat.id}}">{{cat.name}}</option>
 						{% endif %}
@@ -47,14 +47,23 @@
 				<td>Requestor:</td>
 				<td>
 					<select id="requestor_choose" name="requestor_choose" type="radio" >
-					  {% for user in Users %}
-					    {% if ticket.user_requestor_id == user.id %}
-						<option value="{{user.id}}"  selected >{{user.get_full_name}}  </option>
-					
+					  {% for users in Users %}
+					  {% if edit %}
+					    {% if ticket.user_requestor_id == users.id %}
+							<option value="{{users.id}}" selected  >{{users.get_full_name}}  </option>
 						{% else %}
-						<option value="{{user.id}}">{{user.get_full_name}}  </option>
+							<option value="{{users.id}}">{{users.get_full_name}}  </option>
 						{% endif %}
-					  {% endfor %}
+					  	
+					  {% else %}
+					  	{% if users.id == user.id %}
+							<option value="{{users.id}}" selected  >{{users.get_full_name}}  </option>
+						{% else %}
+							<option value="{{users.id}}">{{users.get_full_name}}  </option>
+						{% endif %}
+					  
+					  {% endif %}
+					  {% endfor %} 
 					</select>			
 				</td>
 			</tr>

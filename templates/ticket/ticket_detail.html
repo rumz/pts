@@ -25,7 +25,7 @@
     {% endifequal %}
     <h5>Ticket age: <b> {{ticket_age}}</b></h5>
    
-    <h5>Assign User:<b> {{ticket.assign_user.get_full_name}}</b></h5>
+    <h5>Assigned User:<b> {{ticket.assign_user.get_full_name}}</b></h5>
     <h5>Category: <b>{{ticket.category}}</b> </h5>
     <h5>Requester: <b>{{ticket.user_requestor.get_full_name}}</b> </h5>
     {% if ticket.status%}
@@ -42,7 +42,7 @@
              {% if ticket.status%}
                 <a class="btn btn-success" href="/close_status_ticket/{{ticket.id}}/">Close Ticket</a>
              {% else %}
-                <a class="btn btn-success" href="/open_status_ticket/{{ticket.id}}/">Open Ticket</a>
+                <a class="btn btn-success" href="/open_status_ticket/{{ticket.id}}/">Reopen Ticket</a>
         	 {% endif %}
             {% endif %}
 

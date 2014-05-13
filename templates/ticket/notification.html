@@ -1,13 +1,13 @@
 {% extends 'ticket/base.html' %}
-
+{% load sorting_tags %}
 {% block content %}
 <div>
 
 
 	<table   class=" table table-hover table-condensed table-striped-green">
 		<thead>
-			<th class="col-xs-6 col-sm-3 " ><a href=""> Subject</a></th>
-			<th class="col-xs-6 col-sm-3 ">Description</th>
+			<th data-sort="string" class="col-xs-6 col-sm-3 " > Subject</th>
+			<th data-sort="string" class="col-xs-6 col-sm-3 ">Description</th>
 			<th class="col-xs-6 col-sm-3 ">Date Created</th>
 		</thead>
 		<tbody>
@@ -50,7 +50,7 @@
                   {% ifequal ticket.created|date:'a' 'a.m.' %}
                       {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am     
                   {% else %}
-                      {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}pm>
+                      {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}pm
                   {% endifequal %}
               {% endifequal %}             
 
