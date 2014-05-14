@@ -51,7 +51,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'bootstrap3',
     'tickets',
-    'sorting_bootstrap'
 )
 
 MIDDLEWARE_CLASSES = (
