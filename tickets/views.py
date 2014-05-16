@@ -281,6 +281,8 @@ def set_comment(request):
     context = RequestContext(request)
     com = request.GET.get('_comment')
     ticket_id = request.GET.get('_ticket')
+    print ticket_id
+    Ticket.objects.filter(id=ticket_id).update(flag=True)
     c=Comment.objects.create(comment=com,user_id=request.user.id, ticket_id = ticket_id)
     c.save()
     co=Comment.objects.filter(ticket_id=ticket_id).order_by('-created')
