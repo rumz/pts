@@ -220,8 +220,9 @@ def view_ticket(request, pk):
     document = Document.objects.filter(ticket_id=pk)
     count = Ticket.objects.filter(flag=True, assign_user_id=request.user.id).count()
     user = User.objects.get(id=request.user.id)
+    employee = Employee.objects.get(user_id=request.user.id)
     return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,'ticket': t,'user': user, 
-              'Comment':c, 'count':count, 'form': form, 'documents': document, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
+              'Comment':c, 'count':count, 'form': form, 'employee':employee, 'documents': document, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
 
 @login_required(login_url='/')
 def edit_ticket(request, pk):
