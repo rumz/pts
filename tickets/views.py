@@ -25,10 +25,12 @@ def ticketing_login(request, *args):
         user = auth.authenticate(username=userid, password=passwords)
         if user is not None and user.is_active:
            auth.login(request,user)
-           employee = Employee.objects.get(user_id=request.user.id)
-           request.session['is_logged_in'] = True
-           return home(request, 'open_status','','',False, 'home', employee)
-           
+           if Employee.objects.filter(user_id=request.user.id).exists():
+                employee = Employee.objects.get(user_id=request.user.id)
+                request.session['is_logged_in'] = True
+                return home(request, 'open_status','','',False, 'home', employee)
+           else:
+                return HttpResponseRedirect('/')
         else:
         
            return HttpResponseRedirect('/')

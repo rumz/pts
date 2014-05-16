@@ -23,7 +23,7 @@ class Employee(models.Model):
     position = models.CharField(max_length=45)
     department = models.CharField(max_length=45)
     address = models.CharField(max_length=100, blank=True)
-    image_path = models.FileField(upload_to='profile_pics/')
+    image_path = models.FileField(upload_to='profile_pics/', default ='profile_pics/default_male.png')
 
     def __unicode__(self):
       return self.user.username
