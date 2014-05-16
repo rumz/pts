@@ -145,7 +145,7 @@ td.advance{
 }
 
 .description { max-width: 500px; }
-.subject { max-width: 280px; }
+.subject { max-width: 400px; }
 .date_created { max-width: 180px; }
 .age  { max-width: 100px; }
 .user  { max-width: 200px; }
