@@ -1,0 +1,78 @@
+{% extends './ticket/base.html' %}
+
+{% block content %}
+
+<div >
+    <form method="GET"  action="advance_search_ticket"> {% csrf_token %}
+    <br>
+    <div>
+        <table id="pad">
+            <tr>
+                <td class="advance">Subject:</td>
+                <td><input  class="form-control" style="width: 500px;" type="txt" id="subject_advance" name="subject_advance" placeholder="Subject" ></td>
+            </tr>
+            <tr><td>&nbsp;</td>&nbsp;<td></td></tr>
+            <tr>
+                <td class="advance">Description:</td>
+                <td> <input  class="form-control" style="width: 500px; "  type="txt" id="description_advance" name="description_advance" placeholder="Description"></td>
+            </tr>
+            <tr><td>&nbsp;</td>&nbsp;<td></td></tr>
+            <tr>
+                <td class="advance">Status: </td>
+                <td> <select class="btn btn-default dropdown-toggle" style="width: 500px; " name="status_advance" id="status_advance" type="radio" >
+                    <option value=""/></option>
+                    <option value="open"/>Open</option>
+                    <option value="close"/>Close</option>
+            </select></td>
+            </tr>
+            <tr><td>&nbsp;</td>&nbsp;<td></td></tr>
+            <tr>
+                <td class="advance">Assign User: </td>
+                
+                <td> 
+                    <select class="btn btn-default dropdown-toggle" style="width: 500px; " name="assign_user_advance" id="assign_user_advance" type="radio" >
+                        <option value=""/> </option>
+                        {% for users in users %}
+                        <option value="{{users.id}}"/>{{users.get_full_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td>&nbsp;<td></td></tr>
+            <tr>
+                <td class="advance">Category: </td>
+                
+                <td> 
+                    <select class="btn btn-default dropdown-toggle" style="width: 500px; " name="category_advance" id="category_advance" type="radio" >
+                        <option value=""/> </option>
+                        {% for category in Category %}
+                        <option value="{{category.id}}"/>{{category.name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td>&nbsp;<td></td></tr>
+            <tr>
+                <td class="advance">Requestor: </td>
+                
+                <td> 
+                    <select class="btn btn-default dropdown-toggle" style="width: 500px; " name="request_user_advance" id="request_user_advance" type="radio" >
+                        <option value=""/> </option>
+                        {% for users in users %}
+                        <option value="{{users.id}}"/>{{users.get_full_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        </table>     
+    </div>
+    <div style=" width: 50%;" >
+    <br>
+     <button style="float: right" type="submit" class="btn btn-success">Search</button>
+    </div> 
+   
+    </form>
+</div >
+
+
+{% endblock %}

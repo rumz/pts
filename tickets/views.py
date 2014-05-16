@@ -13,17 +13,10 @@ from django.utils.decorators import method_decorator
 from .models import TicketAge ,Category, Ticket, Comment, User, Employee, Document
 #from .forms import TicketForm
 SYSTEM_NAME='PTS'
-def ticketing_login(request):
+def ticketing_login(request, *args):
    
      if request.session.get('is_logged_in', False):
-        co = Category.objects.all()
-        query = "Select *, weekdays(created::date,now()::date) AS age FROM tickets_ticket ORDER BY created DESC"
-        tick = Ticket.objects.raw(query)
-        count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id).count()
-        user = User.objects.get(id=request.user.id)
-        return render(request, './ticket/home.html', {'Ticket': tick,'Category': co, 
-                      'system_name': SYSTEM_NAME, 'user': user,'count':count, 
-                      'datetime': datetime.datetime.now()})
+         return home(request, 'open_status','','',False,'home')
 
      if request.method == 'POST':
         userid = request.POST.get('userID')
@@ -31,24 +24,33 @@ def ticketing_login(request):
         user = auth.authenticate(username=userid, password=passwords)
         if user is not None and user.is_active:
            auth.login(request,user)
-           co = Category.objects.all()
-           query = "Select *, weekdays(created::date,now()::date) AS age FROM tickets_ticket ORDER BY created DESC"
-           tick = Ticket.objects.raw(query)
            request.session['is_logged_in'] = True
-           count = Ticket.objects.filter(flag=True, assign_user_id=request.user.id).count()
+           return home(request, 'open_status','','',False, 'home')
            
-           return render(request, './ticket/home.html', {'Ticket': tick,'Category': co, 
-                        'system_name': SYSTEM_NAME, 'user': user, 'count':count,
-                        'datetime': datetime.datetime.now()})
-        
         else:
         
            return HttpResponseRedirect('/')
      
      else:
          form=LogInForm()
-         return render(request,'login.html',{'form': form,'system_name': SYSTEM_NAME,
+         return render(request,'login.html',{'form': form,'system_name': 'Phlhealth ARMM Ticketing System',
                      'cover_url':'static/images/19th_logo.jpg'})
+
+def all_tickets(request):
+    return home(request, 'all_tickets','','',False,'all_ticket')
+
+def closed_tickets(request):
+    return home(request, 'closed_tickets','','',False,'closed')
+
+def home(request, *args):
+    #print args[0]
+    co = Category.objects.all()
+    ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
+    count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id).count()
+    user = User.objects.get(id=request.user.id)
+    return render(request, './ticket/home.html', {'Ticket': ticket,'Category': co, 
+                      'system_name': SYSTEM_NAME, 'user': user,'count':count, 
+                      'datetime': datetime.datetime.now(), 'state': args[0],args[4]:'active'})
 
 @login_required(login_url='/')
 def open_ticket(request):
@@ -60,18 +62,80 @@ def open_ticket(request):
    count = Ticket.objects.filter(flag=True, assign_user_id=request.user.id).count()
    
    return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,
-                'user': user,'Category': co, 'Users':users, 'count':count, 'open': openticket, 'status': status})
+                'user': user,'Category': co,'open_ticket':'active', 'Users':users, 'count':count, 'open': openticket, 'status': status})
 
 @login_required(login_url='/')
 def search_ticket(request):
    category_filter = request.GET.get('ticket_search_filters')
    search = request.GET.get('seach_ticket')
+   state = request.GET.get('state')
    co = Category.objects.all()
-   ticket = Ticket.objects.filter(category=category_filter,subject__istartswith=search)
+   ticket = Ticket.objects.filter(category=category_filter, subject__istartswith=search).extra(select = {'age':'weekdays(created::date,now()::date)'})
    count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id ).count()
    user = User.objects.get(id=request.user.id)
    return render(request, './ticket/home.html', {'Ticket': ticket,'Category': co,
-                'system_name': SYSTEM_NAME, 'user': user,'count':count})
+                'system_name': SYSTEM_NAME, 'user': user,'count':count, 'state':state})
+
+@login_required(login_url='/')
+def advance_search_ticket(request):
+    category = request.GET.get('category_advance')
+    subject = request.GET.get('subject_advance')
+    ticket_status = request.GET.get('status_advance')
+    description = request.GET.get('description_advance')
+    assign_user = request.GET.get('assign_user_advance')
+    requestor = request.GET.get('request_user_advance')
+    count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id ).count()
+    user = User.objects.get(id=request.user.id)
+    query=''
+    first = True
+    if subject == '' and description == '' and ticket_status == '' and assign_user == '' and category == '' and requestor == '':
+        return HttpResponseRedirect('/advance_search')
+    else:
+        if subject != '':
+            query = " subject like '"+ subject+"%%'"
+            first = False
+        if description != '':
+            if first:
+                query += " description like '"+ description+"%%'"
+                first = False
+            else:
+                query += " and description like '"+ description+"%%'"
+        if ticket_status == 'open':
+            if first:
+                query += " status = True"
+                first = False
+            else:
+                query += " and status = True"     
+        if ticket_status == 'close':
+            if first:
+                query += " status = False"
+                first = False
+            else:
+                query += " and status = False"
+        if assign_user != '':
+            if first:
+                query += " assign_user_id = "+assign_user
+                first = False
+            else:
+                query += " and assign_user_id = "+assign_user
+        if category != '':
+            if first:
+                query += " category_id = "+category
+                first = False
+            else:
+                query += " and category_id = "+category
+        if requestor != '':
+            if first:
+                query += " user_requestor_id = "+requestor
+                first = False
+            else:
+                query += " and user_requestor_id = "+requestor
+
+
+        ticket = Ticket.objects.raw("Select *, weekdays(created::date,now()::date) as age From tickets_ticket where "+query)
+
+        return render(request, './ticket/advance_search_result.html', {'Ticket': ticket, 'count':count,
+                    'system_name': SYSTEM_NAME, 'state':'all_tickets'})
 
 @login_required(login_url='/')
 def view_profile(request, pk):
@@ -202,7 +266,7 @@ def view_notification(request):
     count = Ticket.objects.filter(flag=True, assign_user_id=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
-                  'ticket': t,'user': user, 'count':count, 'datetime':datetime.datetime.now()})
+                  'ticket': t,'user': user, 'count':count, 'notification':'active', 'datetime':datetime.datetime.now()})
 
 @login_required(login_url='/')
 def view_request(request):
@@ -210,7 +274,7 @@ def view_request(request):
     count = Ticket.objects.filter(flag=True, assign_user_id=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
-                  'ticket': t,'user': user, 'count':count, 'datetime':datetime.datetime.now()})
+                  'ticket': t,'user': user, 'request':'active', 'count':count, 'datetime':datetime.datetime.now()})
 
 @login_required(login_url='/')
 def set_comment(request):
@@ -259,8 +323,18 @@ def about(request):
     user = User.objects.get(id=request.user.id)
     return render(request, './about_us.html', {'system_name': SYSTEM_NAME, 'user': user,'count':count})
 
+def advance_search(request):
+    category = Category.objects.all()
+    ticket = Ticket.objects.all()
+    count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id ).count()
+    user = User.objects.all()
+    return render(request, './ticket/advance_search.html', {'Ticket': ticket,'Category': category, 
+                      'system_name': SYSTEM_NAME, 'users': user, 'count':count})
+
 def microseconds(time):
     return time[0:time.find('.')]
+
+
 
 # def month(time):
 #   return time.month

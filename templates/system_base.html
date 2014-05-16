@@ -12,11 +12,11 @@
 {%endblock%}
 
 {% block header %}
-	<nav role="navigation" >
+	<nav class="navbar navbar-success"  role="navigation" >
 	<div class="container-fluid">
 		
 		<div class="navbar-header">
-			<a  class="navbar-brand" href="#"> <font color="#FFF"> {{system_name}} </font></a>
+			<a  class="navbar-brand" href="#"> {{system_name}}</a>
 		</div>
 	
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -25,7 +25,7 @@
 			</ul>
 			
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/profile/{{user.id}}/" class="navbar-link"> <font color="#FFF">{{ user.get_full_name }} &nbsp;|&nbsp; {{ user.username }}</a></font> </li>
+				<li><a href="/profile/{{user.id}}/" class="navbar-link">{{ user.get_full_name }} &nbsp;|&nbsp; {{ user.username }}</a></li>
 				<li>
 					<div class="btn-group">
 						<button type="button" class="btn btn-inverse navbar-btn dropdown-toggle" data-toggle="dropdown">

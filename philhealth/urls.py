@@ -21,7 +21,11 @@ from tickets.views import (
     edit_ticket,
     about,
     close_status_ticket,
-    open_status_ticket
+    open_status_ticket,
+    all_tickets,
+    closed_tickets,
+    advance_search,
+    advance_search_ticket
 	)
 # CategoryList, , about, user_login,
 
@@ -47,6 +51,10 @@ urlpatterns = patterns('',
     url(r'^close_status_ticket/(?P<pk>\d+)/$',close_status_ticket),
     url(r'^open_status_ticket/(?P<pk>\d+)/$',open_status_ticket),
     url(r'about$',about),
+    url(r'alltickets$',all_tickets),
+    url(r'closedtickets$',closed_tickets),
+    url(r'advance_search$',advance_search),
+    url(r'advance_search_ticket?$',advance_search_ticket),
     url(r'^logout/$',logout)
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

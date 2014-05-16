@@ -2,12 +2,14 @@
 {% load bootstrap3 %}
 
 {% block navbar_li %}
-	
-	<li class="active" ><a href="/"><font color="#FFF">Home</font> </a></li>
-	<li ><a href="/request/"><font color="#FFF">Requests</font> </a></li>
-	<li><a href="/notification/"><span class="badge pull-right">{{count}}</span><font color="#FFF">Notification</font></a></li>
-	<li><a href="/openticket/"><font color="#FFF">Open Ticket</font></a></li>
-	
-	
+
+	<li class="{{home}}" ><a href="/">Home</a></li>
+	<li class="{{request}}" ><a href="/request/">Requests</a></li>
+	<li class="{{notification}}" ><a href="/notification/"><span class="badge pull-right">{{count}}</span>Notification</a></li>
+	<li class="{{open_ticket}}" ><a href="/openticket/">Open Ticket</a></li>
+	<li class="{{all_ticket}}" ><a href="/alltickets">All Tickets</a></li>
+	<li class="{{closed}}" ><a href="/closedtickets">Closed Tickets</a></li>
+	<li class="{{advance}}" ><a href="/advance_search"> <img src="/static/images/icon_magnifier.png/" width="25px" height="25px"> </a></li>
+
 {% endblock %}
 

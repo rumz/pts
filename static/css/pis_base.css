@@ -1,5 +1,6 @@
 body {
 	background: rgba(200, 200, 200, 1);
+	/*background-color: white;*/
 	margin: 0;
 	padding: 0;
 	color: #333;
@@ -28,8 +29,9 @@ body {
     float:right;
   
 }
-#side{    
-	width: 515px;
+#side{
+	width: 50%;    
+	/*width: 515px;*/
 	height: 500px;
     background-color: white;
     
@@ -67,28 +69,30 @@ ul{
 .super{
 	/*background: rgba(240, 240, 240, 1);*/
 	background-color: white; 
-	width: 1024px;
+	width: 98%;
 	margin: 0 auto;
 	min-height: 500px;
 }
 
 header{
-	background: url(/static/images/nav_bg_repeat.jpg);
+	/*background: url(/static/images/nav_bg_repeat.jpg);*/
 	background-repeat: repeat-x;
+	background-color: #187016;
 	background-position: top left;
 	color: #FFF;
-	height: 47px;
-	width: 1024px;
+	height: 55px;
+	width: 98%;
 	margin: 0 auto;
 }
 footer{
-	background: url(/static/images/nav_bg_repeat.jpg);
+	/*background: url(/static/images/nav_bg_repeat.jpg);*/
 	background-repeat: repeat-x;
 	background-position: top left;
+	background-color: #187016;
 	color: #FFF;
 	padding: 0px;
-	height: 47px;
-	width: 1024px;
+	height: 55px;
+	width: 98%;
 	padding-top:15px;
 	margin: 0 auto;
 }
@@ -123,6 +127,9 @@ td.overflow-sm {
 th[data-sort]{
       cursor:pointer;
     }
+td.advance{
+	width: 110px;
+}
 /*th{
 	background-color: #dff0d8;
 	
@@ -164,3 +171,99 @@ div.concat{ overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ell
 }
 
 */
+
+  
+.navbar-success {
+  /*background-color: #222;
+  border-color: #080808;*/
+
+  background-color: #187016;
+  border-color: #4cae4c;
+
+}
+
+.navbar-success .navbar-brand {
+  color: #dff0d8;
+}
+.navbar-success .navbar-brand:hover,
+.navbar-success .navbar-brand:focus {
+  color: #fff;
+  background-color: transparent;
+}
+.navbar-success .navbar-text {
+  color: #fff;
+}
+.navbar-success .navbar-nav > li > a {
+  color: #dff0d8;
+}
+.navbar-success .navbar-nav > li > a:hover,
+.navbar-success .navbar-nav > li > a:focus {
+  color: #D6F00E;
+  background-color: transparent;
+}
+.navbar-success .navbar-nav > .active > a,
+.navbar-success .navbar-nav > .active > a:hover,
+.navbar-success .navbar-nav > .active > a:focus {
+  color: #D6F00E;
+  background-color: #5cb85c;
+}
+.navbar-success .navbar-nav > .disabled > a,
+.navbar-success .navbar-nav > .disabled > a:hover,
+.navbar-success .navbar-nav > .disabled > a:focus {
+  color: #fff;
+  background-color: transparent;
+}
+.navbar-success .navbar-toggle {
+  border-color: #fff;
+}
+.navbar-success .navbar-toggle:hover,
+.navbar-success .navbar-toggle:focus {
+  background-color: #dff0d8;
+}
+.navbar-success .navbar-toggle .icon-bar {
+  background-color: #fff;
+}
+.navbar-success .navbar-collapse,
+.navbar-success .navbar-form {
+  border-color: #101010;
+}
+.navbar-success .navbar-nav > .open > a,
+.navbar-success .navbar-nav > .open > a:hover,
+.navbar-success .navbar-nav > .open > a:focus {
+  color: #fff;
+  background-color: #080808;
+}
+@media (max-width: 767px) {
+  .navbar-success .navbar-nav .open .dropdown-menu > .dropdown-header {
+    border-color: #080808;
+  }
+  .navbar-success .navbar-nav .open .dropdown-menu .divider {
+    background-color: #080808;
+  }
+  .navbar-success .navbar-nav .open .dropdown-menu > li > a {
+    color: #fff;
+  }
+  .navbar-success .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-success .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #fff;
+    background-color: transparent;
+  }
+  .navbar-success .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-success .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-success .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #fff;
+    background-color: #080808;
+  }
+  .navbar-success .navbar-nav .open .dropdown-menu > .disabled > a,
+  .navbar-success .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+  .navbar-success .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+    color: #444;
+    background-color: transparent;
+  }
+}
+.navbar-success .navbar-link {
+  color: #999;
+}
+.navbar-success .navbar-link:hover {
+  color: #fff;
+}

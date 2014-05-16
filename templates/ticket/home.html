@@ -4,7 +4,13 @@
 
 <div style="width: 50%; ">
     <form method="GET" class="form-search" action="search_ticket"> {% csrf_token %}
-    
+        {% if state == 'open_status' %}
+            <input type="hidden" id="state" name="state" value="open_status">
+        {% elif state == 'all_tickets' %}
+             <input type="hidden" id="state" name="state" value="all_tickets">
+        {% elif state == 'closed_tickets' %}
+             <input type="hidden" id="state" name="state" value="closed_tickets">
+        {% endif %}    
       <div class="input-group">
         <div class="input-group-addon">
             <select name="ticket_search_filters" id="ticket_search_filters" type="radio" >
@@ -20,83 +26,29 @@
             </button>
         </span>
       </div><!-- /btn-group -->
+
     </form>
 </div >
 <div>
-    
   <table  class="table table-hover table-condensed table-striped-green ">
     <thead>
         <tr >
-            <th data-sort="string" class="col-xs-6 col-sm-3 ">Subject</th>
-            <th data-sort="string" class="col-xs-6 col-sm-3 ">Category</th>
-            <th data-sort="string" class="col-xs-6 col-sm-3 ">Assigned User</th>
-            <th data-sort="string" class="col-xs-6 col-sm-3 ">Requester</th>
-            <th class="col-xs-6 col-sm-3 ">Created</th>
-            <th data-sort="int" class="col-xs-6 col-sm-3 ">Age</th>
+            <th data-sort="string" class="col-xs-3 col-sm-1">Subject</th>
+            <th data-sort="string" class="col-xs-3 col-sm-1 ">Category</th>
+            <th data-sort="string" class="col-xs-3 col-sm-1 ">Assigned User</th>
+            <th data-sort="string" class="col-xs-3 col-sm-1 ">Requester</th>
+            <th class="col-xs-3 col-sm-1 ">Created</th>
+            <th data-sort="int" class="col-xs-3 col-sm-1 ">Age</th>
         </tr>
     </thead>
-    <tbody>
-        {% for ticket in Ticket %}
-           {% if ticket.status == True and ticket.assign_user_id == user.id %}
-            <tr >
-                <td><div class="concat subject">
-                    <a href="/ticketdetailed/{{ticket.id}}/">{{ ticket.subject }}</a>
-                    </div>
-                </td>
-                <td>
-                <div class="concat age" >
-                    <a href="#">{{ticket.category}}</a>
-                </div>  
-                </td>
-                <td>
-                <div class="concat user">
-                    <a href="/assign_tickets/{{ticket.assign_user.id}}/"> {{ticket.assign_user.get_full_name}}</a>
-                </div>
-                </td>
-                <td>
-                <div class="concat user" >
-                    <a href="/requester_tickets/{{ticket.user_requestor.id}}/"> {{ticket.user_requestor.get_full_name}}</a>
-                </div>
-                </td>
-                <td>
-                <div class="concat date_created">
-                    <a href="#">
-                        {% ifequal ticket.created.year datetime.year%}
-                            {% ifequal ticket.created|date:'M d'  datetime|date:'M d'%}
-                                {{ticket.created|timesince}} ago
-                            {% else %}
-                                {% ifequal ticket.created|date:'a' 'a.m.' %}
-                                    {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am     
-                                {% else %}
-                                    {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}pm
-                                {% endifequal %}
-                            {% endifequal %}             
-
-                        {% else %}
-                            {% ifequal ticket.created|date:'a' 'a.m.' %}
-                                {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am     
-                            {% else %}
-                                {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am  
-                            {% endifequal %}
-                      
-                        {% endifequal %}
-                    </a>
-                </div>
-                </td>
-                <td ><div class="concat age" >
-                    {% if ticket.age == 0 %}
-                        {{' '}}
-                    {%elif ticket.age <= 1 %}
-                        {{ticket.age}} day
-                    {% else %}
-                        {{ticket.age}} days
-                    {% endif %}
-                </div>
-                </td>
-            </tr>
-            {% endif %}
-        {% endfor %}
-    </tbody>
+        {% if state == 'open_status' %}
+            {% include 'ticket/ticket_open_status.html' %}
+        {% elif state == 'all_tickets' %}
+            {% include 'ticket/all_tickets.html' %}
+        {% elif state == 'closed_tickets' %}
+            {% include 'ticket/closed_tickets.html' %}
+        {% endif %}
+        
   </table>
 </div>
 

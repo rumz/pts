@@ -2,13 +2,19 @@
 	<input type="hidden" id="ticket_edit" name="ticket_edit" value="{{ticket.id}}" >
 	<br>
 	  <div>
-			<h5>Subject:&nbsp;<input style="width: 425px; height: 28px; " id='ticket_subject' name="ticket_subject" type="text" value="{{ticket.subject}}" ></h5>
+	  <table id="pad">
+	  		<tr >
+	  			<td class="advance"> Subject:</td>
+	  			<td><input style="width: 370px;  " id='ticket_subject' name="ticket_subject" type="text" placeholder="Subject" class="form-control"  value="{{ticket.subject}}" ></td>
+	  		</tr>
+	  	</table>
+			
 
 		</div>
 		<div>
 			<h5>Description:&nbsp;</h5>
-			<textarea id="pad" style="height: 200px; width: 480px; max-height: 200px; 
-        min-width: 480px; max-width: 480px" name="description"  >{{ticket.description}}</textarea>
+			<textarea class="form-control" id="pad" style="height: 200px; width: 480px; max-height: 200px; 
+        min-width: 480px; max-width: 480px" placeholder="Description" name="description"  >{{ticket.description}}</textarea>
 	
 		</div>
 		<div>
@@ -16,7 +22,7 @@
 			<tr>
 				<td>Assign User:&nbsp;</td>
 				<td>
-					<select name="user_choose" id="user_choose"  type="radio" >
+					<select style="width: 250px; " class="btn btn-default dropdown-toggle" name="user_choose" id="user_choose"  type="radio" >
 					<option  value="blank" > </option>
 					  {% for user in Users %}
 					    {% if ticket.assign_user_id == user.id %}
@@ -32,7 +38,7 @@
 			<tr>
 				<td>Category:&nbsp;</td>
 				<td>
-					<select id="category_choose" name="category_choose" type="radio" >
+					<select style="width: 250px; " class="btn btn-default dropdown-toggle" id="category_choose" name="category_choose" type="radio" >
 					  {% for cat in Category %}
 					  	{%if ticket.category_id == cat.id %}
 						<option value="{{cat.id}}" selected >{{cat.name}}</option>
@@ -46,7 +52,7 @@
 			<tr>
 				<td>Requestor:</td>
 				<td>
-					<select id="requestor_choose" name="requestor_choose" type="radio" >
+					<select style="width: 250px; " class="btn btn-default dropdown-toggle" id="requestor_choose" name="requestor_choose" type="radio" >
 					  {% for users in Users %}
 					  {% if edit %}
 					    {% if ticket.user_requestor_id == users.id %}
