@@ -2,33 +2,6 @@
 
 {% block content %}
 
-<div style="width: 50%; background-color: white; ">
-    <form method="GET" class="form-search" action="search_ticket"> {% csrf_token %}
-        {% if state == 'open_status' %}
-            <input type="hidden" id="state" name="state" value="open_status">
-        {% elif state == 'all_tickets' %}
-             <input type="hidden" id="state" name="state" value="all_tickets">
-        {% elif state == 'closed_tickets' %}
-             <input type="hidden" id="state" name="state" value="closed_tickets">
-        {% endif %}    
-      <div class="input-group">
-        <div class="input-group-addon">
-            <select name="ticket_search_filters" id="ticket_search_filters" type="radio" >
-                {% for cat in Category %}
-                    <option value="{{cat.id}}"/>{{cat.name}}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <input name='seach_ticket' type="text" class="form-control" placeholder="Search">
-        <span class="input-group-btn">
-            <button id="but" class="btn btn-success" type="submit">
-                <span class="glyphicon glyphicon-search"></span>
-            </button>
-        </span>
-      </div><!-- /btn-group -->
-
-    </form>
-</div >
 <div >
   <table  class="table table-hover table-condensed table-striped-green ">
     <thead>

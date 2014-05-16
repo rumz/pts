@@ -23,7 +23,6 @@
                 </td>
                 <td>
                 <div class="concat date_created">
-                    <a href="#">
                         {% ifequal ticket.created.year datetime.year%}
                             {% ifequal ticket.created|date:'M d'  datetime|date:'M d'%}
                                 {{ticket.created|timesince}} ago
@@ -43,7 +42,6 @@
                             {% endifequal %}
                       
                         {% endifequal %}
-                    </a>
                 </div>
                 </td>
                 <td ><div class="concat age" >

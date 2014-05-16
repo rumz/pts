@@ -76,7 +76,13 @@
       });
 
     });
-
+$(document).ready(function () {
+        $("#id_search").quicksearch("table tbody tr", {
+          noResults: '#noresults',
+          stripeRows: ['odd', 'even'],
+          loader: 'span.loading'
+        });
+});
 function getComment(form){
 	
   var comment_text = document.getElementById('comments').value;

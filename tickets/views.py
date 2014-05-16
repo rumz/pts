@@ -50,13 +50,14 @@ def closed_tickets(request):
 
 def home(request, *args):
     #print args[0]
-    co = Category.objects.all()
+    search = request.GET.get('seach_ticket')
+    co = Category.objects.all()  
     ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
     count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     return render(request, './ticket/home.html', {'Ticket': ticket,'Category': co, 
                       'system_name': SYSTEM_NAME, 'user': user,'count':count, 
-                      'datetime': datetime.datetime.now(), 'state': args[0],args[4]:'active', 'employee':args[5]})
+                      'datetime': datetime.datetime.now(), 'state': args[0],args[4]:'active', 'employee':args[5], 'quick_search': True})
 
 @login_required(login_url='/')
 def open_ticket(request):
@@ -70,18 +71,6 @@ def open_ticket(request):
    
    return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,
                 'user': user,'Category': co,'open_ticket':'active', 'Users':users, 'count':count, 'open': openticket, 'status': status, 'employee':employee})
-
-@login_required(login_url='/')
-def search_ticket(request):
-   category_filter = request.GET.get('ticket_search_filters')
-   search = request.GET.get('seach_ticket')
-   state = request.GET.get('state')
-   co = Category.objects.all()
-   ticket = Ticket.objects.filter(category=category_filter, subject__istartswith=search).extra(select = {'age':'weekdays(created::date,now()::date)'})
-   count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id ).count()
-   user = User.objects.get(id=request.user.id)
-   return render(request, './ticket/home.html', {'Ticket': ticket,'Category': co,
-                'system_name': SYSTEM_NAME, 'user': user,'count':count, 'state':state})
 
 @login_required(login_url='/')
 def advance_search_ticket(request):
@@ -275,7 +264,7 @@ def view_notification(request):
     user = User.objects.get(id=request.user.id)
     employee = Employee.objects.get(user_id=request.user.id)
     return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
-                  'ticket': t,'user': user,'employee': employee, 'count':count, 'notification':'active', 'datetime':datetime.datetime.now()})
+                  'ticket': t,'user': user,'employee': employee, 'count':count, 'notification':'active', 'datetime':datetime.datetime.now(), 'quick_search': True})
 
 @login_required(login_url='/')
 def view_request(request):
@@ -284,7 +273,7 @@ def view_request(request):
     user = User.objects.get(id=request.user.id)
     employee = Employee.objects.get(user_id=request.user.id)
     return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
-                  'ticket': t,'user': user, 'employee':employee, 'request':'active', 'count':count, 'datetime':datetime.datetime.now()})
+                  'ticket': t,'user': user, 'employee':employee, 'request':'active', 'count':count, 'datetime':datetime.datetime.now(),'quick_search': True})
 
 @login_required(login_url='/')
 def set_comment(request):

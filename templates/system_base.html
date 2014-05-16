@@ -23,7 +23,21 @@
 			<ul class="nav navbar-nav">
 			{% block navbar_li %}{% endblock %}
 			</ul>
-			
+			<form class="navbar-form navbar-left" role="search">{% csrf_token %}
+			 {% if state == 'open_status' %}
+            	<input type="hidden" id="state" name="state" value="open_status">
+       		 {% elif state == 'all_tickets' %}
+            	 <input type="hidden" id="state" name="state" value="all_tickets">
+        	 {% elif state == 'closed_tickets' %}
+             	<input type="hidden" id="state" name="state" value="closed_tickets">
+        	 {% endif %}    
+        	 {% if quick_search %}
+        		<div class="form-group">
+          		<input type="text" class="form-control" name="search" value="" id="id_search" placeholder="Search"><span class="loading">Loading...</span>
+       			 </div>
+       		 {% endif %}
+        		
+     		 </form>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="/profile/{{user.id}}/" class="navbar-link"> <img style="width: 20px; height: 20px; " src="{{MEDIA_URL}}{{employee.image_path}}"> {{ user.get_full_name }} </a></li>
 				<li>
