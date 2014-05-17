@@ -77,7 +77,7 @@ ul{
 header{
 	/*background: url(/static/images/nav_bg_repeat.jpg);*/
 	background-repeat: repeat-x;
-	background-color: #187016;
+	background-color: #257C1E;
 	background-position: top left;
 	color: #FFF;
 	height: 55px;
@@ -88,7 +88,7 @@ footer{
 	/*background: url(/static/images/nav_bg_repeat.jpg);*/
 	background-repeat: repeat-x;
 	background-position: top left;
-	background-color: #187016;
+	background-color: #257C1E;
 	color: #FFF;
 	padding: 0px;
 	height: 55px;
@@ -176,8 +176,8 @@ div.concat{ overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ell
 .navbar-success {
   /*background-color: #222;
   border-color: #080808;*/
-
-  background-color: #187016;
+ background-color: #257C1E;
+  /*background-color: #187016;*/
   border-color: #4cae4c;
 
 }
@@ -198,14 +198,15 @@ div.concat{ overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ell
 }
 .navbar-success .navbar-nav > li > a:hover,
 .navbar-success .navbar-nav > li > a:focus {
-  color: #D6F00E;
-  background-color: transparent;
+  /*color: #D6F00E;*/
+  background-color: #187016;
+  /*background-color: transparent;*/
 }
 .navbar-success .navbar-nav > .active > a,
 .navbar-success .navbar-nav > .active > a:hover,
 .navbar-success .navbar-nav > .active > a:focus {
   color: #D6F00E;
-  background-color: #5cb85c;
+  background-color: #187016;
 }
 .navbar-success .navbar-nav > .disabled > a,
 .navbar-success .navbar-nav > .disabled > a:hover,
