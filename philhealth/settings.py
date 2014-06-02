@@ -21,7 +21,7 @@ MEDIA_PATH = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = MEDIA_PATH
 MEDIA_URL = '/media/'
 # (
-    
+
 #   #os.path.join(os.path.dirname(__file__), '..', 'media').replace('\\','/'),
 # )
 
@@ -72,7 +72,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'philhealth',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'PASSWORD': '1',
         'HOST': 'localhost'
     }
 }
