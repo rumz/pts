@@ -237,9 +237,9 @@ def view_ticket(request, pk):
     form = DocumentForm()
     t = Ticket.objects.get(id=pk)
     if t.status:
-      query="Select *, justify_hours(age(now(),created) ) AS hours FROM tickets_ticketage where ticket_id="+ pk +" and done=True and assign_user_id=" + str(t.assigned_id)
+      query="Select *, justify_hours(age(now(),created) ) AS hours FROM ticketage where ticket_id="+ pk +" and done=True and assign_user_id=" + str(t.assigned_id)
     else:
-      query="Select *, justify_hours(age(modified,created) ) AS hours FROM tickets_ticketage where ticket_id="+ pk +" and assign_user_id=" + str(t.assigned_id)
+      query="Select *, justify_hours(age(modified,created) ) AS hours FROM ticketage where ticket_id="+ pk +" and assign_user_id=" + str(t.assigned_id)
     print "t.assigned", t.assigned
     ticket_age=TicketAge.objects.raw(query)
     for x in ticket_age:
@@ -269,7 +269,7 @@ def edit_ticket(request, pk):
   count = Ticket.objects.filter(flag=True, assigned_id=request.user.id).count()
   user = User.objects.get(id=request.user.id)
   return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,
-              'ticket': t,'user': user, 'Category': co, 'Users':users,'Comment':c,'edit': edit_open ,'count':count,'open':edit_open,'form': form, 'documents': document})
+              'ticket': t,'user': user, 'Category': co, 'Users':users,'Comment':c,'edit': edit_open ,'count':count,'open':edit_open,'form': form, 'attachments': attachment})
 
 
 @login_required(login_url='/')

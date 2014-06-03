@@ -37,11 +37,6 @@ class Employee(models.Model):
 
 
 class Ticket(TimeStampedModel):
-    """
-    choice = ((1,'Open'), (0,'Closed'))
-    flags  = ((1,'Unread'), (0,'Read'))
-    """
-
     subject = models.CharField(max_length=200)
     description = models.TextField(default='')
     requester = models.ForeignKey(User, related_name = 'requester')
@@ -63,11 +58,12 @@ class Ticket(TimeStampedModel):
 
 
 class TicketAge(TimeStampedModel):
-    choices=((1,'done'),
-            (0,'undone'))
     assign_user = models.ForeignKey(User)
     ticket = models.ForeignKey(Ticket)
-    done = models.BooleanField(choices=choices)
+    done = models.BooleanField()
+
+    class Meta:
+        db_table = 'ticketage'
 
 
 class Attachment(TimeStampedModel):
