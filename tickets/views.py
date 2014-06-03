@@ -11,7 +11,14 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
 
-from .models import TicketAge ,Category, Ticket, Comment, User, Employee, Document
+from .models import TicketAge
+from .models import Category
+from .models import Ticket
+from .models import Comment
+from .models import User
+from .models import Employee
+from .models import Attachment
+
 from tickets.forms import LogInForm, DocumentForm
 
 
@@ -229,7 +236,6 @@ def view_ticket(request, pk):
     open_button=True
     form = DocumentForm()
     t = Ticket.objects.get(id=pk)
-    time=0
     if t.status:
       query="Select *, justify_hours(age(now(),created) ) AS hours FROM tickets_ticketage where ticket_id="+ pk +" and done=True and assign_user_id=" + str(t.assigned_id)
     else:
@@ -242,11 +248,11 @@ def view_ticket(request, pk):
     if request.user.id == t.assigned_id:
       Ticket.objects.filter(id=pk).update(flag=False)
     c = Comment.objects.filter(ticket_id=pk).order_by('-created')
-    document = Document.objects.filter(ticket_id=pk)
+    attachment = Attachment.objects.filter(ticket_id=pk)
     count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,'ticket': t,'user': user,
-              'Comment':c, 'count':count, 'form': form, 'documents': document, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
+              'Comment':c, 'count':count, 'form': form, 'attachments': attachment, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
 
 
 @login_required(login_url='/')
@@ -259,7 +265,7 @@ def edit_ticket(request, pk):
   if request.user.id == t.assigned_id:
      Ticket.objects.filter(id=pk).update(flag=False)
   c = Comment.objects.filter(ticket_id=pk).order_by('-created')
-  document = Document.objects.filter(ticket_id=pk)
+  attachment = Attachment.objects.filter(ticket_id=pk)
   count = Ticket.objects.filter(flag=True, assigned_id=request.user.id).count()
   user = User.objects.get(id=request.user.id)
   return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,
@@ -343,7 +349,7 @@ def upload(request,pk):
         form = DocumentForm(request.POST, request.FILES)
         lis = request.FILES['docfile'].name
         if form.is_valid():
-            newdoc = Document(docfile = request.FILES['docfile'],name=lis,ticket_id=pk, user_id=request.user.id)
+            newdoc = Attachment(docfile = request.FILES['docfile'],name=lis,ticket_id=pk, user_id=request.user.id)
             c=Comment.objects.create(comment='Uploaded file '+lis,user_id=request.user.id, ticket_id = pk)
             newdoc.save()
             c.save()

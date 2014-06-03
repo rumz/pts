@@ -70,11 +70,14 @@ class TicketAge(TimeStampedModel):
     done = models.BooleanField(choices=choices)
 
 
-class Document(TimeStampedModel):
-    ticket = models.ForeignKey(Ticket)
-    name = models.CharField(max_length=200)
-    docfile = models.FileField(upload_to='documents/%Y/%m/%d')
+class Attachment(TimeStampedModel):
+    ticket  = models.ForeignKey(Ticket)
+    name    = models.CharField(max_length=200)
+    docfile = models.FileField(upload_to='attachments/%Y/%m/%d')
     user    = models.ForeignKey(User)
+
+    class Meta:
+        db_table = 'attachment'
 
 
 class Comment(TimeStampedModel):
