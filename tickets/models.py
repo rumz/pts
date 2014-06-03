@@ -82,5 +82,8 @@ class Comment(TimeStampedModel):
     comment = models.TextField()
     user    = models.ForeignKey(User)
 
+    class Meta:
+        db_table = 'comment'
+
     def __unicode__(self):
         return self.comment
