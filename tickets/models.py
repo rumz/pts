@@ -29,6 +29,9 @@ class Employee(models.Model):
     address = models.CharField(max_length=100, blank=True)
     image_path = models.FileField(upload_to='profile_pics/', default ='profile_pics/default_male.png')
 
+    class Meta:
+        db_table = 'employee'
+
     def __unicode__(self):
         return self.user.username
 
