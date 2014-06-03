@@ -37,20 +37,24 @@ class Employee(models.Model):
 
 
 class Ticket(TimeStampedModel):
-    choice=((1,'Open'),
-        (0,'Closed'))
-    flags=((1,'unRead'),
-        (0,'Read'))
+    """
+    choice = ((1,'Open'), (0,'Closed'))
+    flags  = ((1,'Unread'), (0,'Read'))
+    """
 
     subject = models.CharField(max_length=200)
     description = models.TextField(default='')
-    user_requestor = models.ForeignKey(User, related_name = 'ticket_requestor')
-    status = models.BooleanField(choices=choice)
+    requester = models.ForeignKey(User, related_name = 'requester')
+    status = models.BooleanField()
     priority = models.IntegerField()
     category = models.ForeignKey(Category)
-    created_by = models.ForeignKey(User, related_name = 'ticket_created')
-    assign_user = models.ForeignKey(User, related_name = 'ticket_assign')
-    flag = models.BooleanField(choices=flags)
+    created_by = models.ForeignKey(User, related_name = 'created_by')
+    assigned = models.ForeignKey(User, related_name = 'assigned_user')
+    flag = models.BooleanField()
+
+    class Meta:
+        db_table = 'ticket'
+
     def __unicode__(self):
         return self.id
 
