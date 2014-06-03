@@ -277,6 +277,7 @@ def view_notification(request):
     return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
                   'ticket': t,'user': user,'employee': employee, 'count':count, 'notification':'active', 'datetime':datetime.datetime.now()})
 
+                  
 @login_required(login_url='/')
 def view_request(request):
     t = Ticket.objects.filter(user_requestor_id=request.user.id)
@@ -286,6 +287,7 @@ def view_request(request):
     return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
                   'ticket': t,'user': user, 'employee':employee, 'request':'active', 'count':count, 'datetime':datetime.datetime.now()})
 
+                  
 @login_required(login_url='/')
 def set_comment(request):
     context = RequestContext(request)
@@ -299,6 +301,7 @@ def set_comment(request):
     return render_to_response('ticket/comment_detail.html', {'Comment': co,
                               'datetime':datetime.datetime.now()}, context)
 
+
 @login_required(login_url='/')
 def tickets_assign(request,pk):
     t = Ticket.objects.filter(assign_user_id=pk)
@@ -307,6 +310,7 @@ def tickets_assign(request,pk):
     return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
                 'ticket': t,'user': user, 'count':count})
 
+                
 @login_required(login_url='/')
 def tickets_request(request,pk):
     t = Ticket.objects.filter(user_requestor_id=pk)
@@ -315,6 +319,7 @@ def tickets_request(request,pk):
     return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
                   'ticket': t,'user': user, 'count':count})
 
+                  
 def upload(request,pk):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
@@ -327,11 +332,13 @@ def upload(request,pk):
             
     return HttpResponseRedirect('/ticketdetailed/'+pk+'/')
 
+
 def about(request):
     employee = Employee.objects.get(user_id=request.user.id)
     count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     return render(request, './about_us.html', {'system_name': SYSTEM_NAME, 'user': user,'count':count, 'employee':employee})
+
 
 def advance_search(request):
     category = Category.objects.all()
@@ -342,11 +349,6 @@ def advance_search(request):
     return render(request, './ticket/advance_search.html', {'Ticket': ticket,'Category': category, 
                       'system_name': SYSTEM_NAME, 'employee':employee, 'users': user, 'count':count})
 
+
 def microseconds(time):
     return time[0:time.find('.')]
-
-
-
-# def month(time):
-#   return time.month
-

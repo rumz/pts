@@ -18,7 +18,6 @@ class Category(TimeStampedModel):
     class Meta:
         db_table = 'category'
 
-
     def __unicode__(self):
         return self.name
 
