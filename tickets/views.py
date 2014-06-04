@@ -22,7 +22,6 @@ from .models import Attachment
 
 from tickets.forms import LogInForm, DocumentForm
 
-
 SYSTEM_NAME='PTS'
 
 
@@ -65,35 +64,22 @@ def closed_tickets(request):
 @login_required(login_url='/')
 def home(request, *args):
     data = {'system_name' : SYSTEM_NAME}
-    try: 
-        search = request.GET.get('seach_ticket')
+    limit = 15
+    total_rows = 0
+    co = Category.objects.all()  
+    if args[0] == 'open_status':
+        ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created']).filter(status=True,assigned_id=request.user.id)
+        total_rows = ticket.count()
+    else:
+        ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
+        total_rows = ticket.count()
+    count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
+    user = User.objects.get(id=request.user.id)
+    
         
-       
-        co = Category.objects.all()  
-        if args[0] == 'open_status':
-            ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created']).filter(status=True,assigned_id=request.user.id)
-        else:
-            ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
-        count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
-        user = User.objects.get(id=request.user.id)
-        
-        queries_without_page = request.GET.copy()
-
-        if queries_without_page.has_key('page'):
-            del queries_without_page['page']
-
-        paginator = Paginator(ticket, 20)
-        try: page = int(request.GET.get("page", '1'))
-        except ValueError: page = 1
-
-        try:
-            ticket = paginator.page(page)
-        except (InvalidPage, EmptyPage):
-            ticket = paginator.page(paginator.num_pages)
-    except:
-        print sys.exc_info()[0], sys.exc_info()[1]
-
-    data['Ticket'] = ticket
+    data['current_offset'] = request.GET.get('offset', 0)
+    data['offset_list'] = get_offsets(total_rows, limit)        
+    data['Ticket'] = ticket[data['current_offset']: int(data['current_offset']) + limit]
     data['Category'] = co
     data['user'] = user
     data['count'] = count
@@ -102,7 +88,6 @@ def home(request, *args):
     data[args[4]] = 'active'
     data['employee'] = args[5]
     data['quick_search'] = True
-    data['query_params'] = queries_without_page
 
     return render(request, './ticket/home.html',data)
 
@@ -499,3 +484,30 @@ def advance_search(request):
 
 def microseconds(time):
     return time[0:time.find('.')]
+
+def prev_offset(of, lm):
+    if of-lm<0:
+        return of
+    else:
+        return of-lm
+
+def next_offset(of, lm, size):
+    if of+lm>size:
+        return of
+    else:
+        return of+lm
+
+
+def get_offsets(total_rows, limit):
+    offset_list = []
+    pages = 0
+    if total_rows%limit>0:
+        pages = (total_rows//limit) + 1
+    else:
+        pages = (total_rows//limit)
+    offset = 0
+    for i in range(pages):
+        offset_list.append({'page_num': (i+1),
+                            'offset'  : offset})
+        offset = offset + limit
+    return offset_list
