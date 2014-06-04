@@ -66,7 +66,6 @@ def home(request, *args):
     data = {'system_name' : SYSTEM_NAME}
     limit = 15
     total_rows = 0
-    co = Category.objects.all()  
     if args[0] == 'open_status':
         ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created']).filter(status=True,assigned_id=request.user.id)
         total_rows = ticket.count()
@@ -83,7 +82,6 @@ def home(request, *args):
     data['current_offset'] = request.GET.get('offset', 0)
     data['offset_list'] = get_offsets(total_rows, limit)        
     data['Ticket'] = ticket[data['current_offset']: int(data['current_offset']) + limit]
-    data['Category'] = co
     data['user'] = user
     data['count'] = count
     data['datetime'] = datetime.datetime.now()
@@ -117,24 +115,24 @@ def open_ticket(request):
     return render(request,'./ticket/tickets.html', data)
 
 
-@login_required(login_url='/')
-def search_ticket(request):
-    data = {'system_name' : SYSTEM_NAME}
-    category_filter = request.GET.get('ticket_search_filters')
-    search = request.GET.get('seach_ticket')
-    state = request.GET.get('state')
-    co = Category.objects.all()
-    ticket = Ticket.objects.filter(category=category_filter, subject__istartswith=search).extra(select = {'age':'weekdays(created::date,now()::date)'})
-    count = Ticket.objects.filter(flag=True, assigned_id=request.user.id ).count()
-    user = User.objects.get(id=request.user.id)
-    data['user'] = user
-    data['Category'] = co
-    data['state'] = state
-    data['Ticket'] = ticket
-    data['count'] = count
+# @login_required(login_url='/')
+# def search_ticket(request):
+#     data = {'system_name' : SYSTEM_NAME}
+#     category_filter = request.GET.get('ticket_search_filters')
+#     search = request.GET.get('seach_ticket')
+#     state = request.GET.get('state')
+#     co = Category.objects.all()
+#     ticket = Ticket.objects.filter(category=category_filter, subject__istartswith=search).extra(select = {'age':'weekdays(created::date,now()::date)'})
+#     count = Ticket.objects.filter(flag=True, assigned_id=request.user.id ).count()
+#     user = User.objects.get(id=request.user.id)
+#     data['user'] = user
+#     data['Category'] = co
+#     data['state'] = state
+#     data['Ticket'] = ticket
+#     data['count'] = count
    
 
-    return render(request, './ticket/home.html', data)
+#     return render(request, './ticket/home.html', data)
 
 
 @login_required(login_url='/')

@@ -1,0 +1,24 @@
+commit faeaf7477baa8a44c7cb16b3db3d379384c96f64
+Author: Elmer Rasuman <elmschaym@gmail.com>
+Date:   Wed Jun 4 23:50:21 2014 +0800
+
+    fixed pagination
+
+commit 0f9e4f2e9f6deeabad68898e3dc604022fd640f0
+Author: Elmer Rasuman <elmschaym@gmail.com>
+Date:   Wed Jun 4 16:40:54 2014 +0800
+
+    pagination number
+
+commit d956cb93e53199aea61e6cb2790f3dd93e8c10f3
+Merge: 503d569 c44fbc1
+Author: Elmer Rasuman <elmschaym@gmail.com>
+Date:   Wed Jun 4 16:39:43 2014 +0800
+
+    Merge branch 'pagination-number'
+
+commit c44fbc1e09592661fa01fb457cb08b34a40f3e92
+Author: Elmer Rasuman <elmschaym@gmail.com>
+Date:   Wed Jun 4 16:38:33 2014 +0800
+
+    number
