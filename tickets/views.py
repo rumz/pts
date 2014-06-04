@@ -63,27 +63,15 @@ def closed_tickets(request):
 
 
 def home(request, *args):
-<<<<<<< HEAD
-    #print args[0]
     search = request.GET.get('seach_ticket')
     co = Category.objects.all()  
-=======
-    co = Category.objects.all()
->>>>>>> 82aec7a868228f76b0ca47e6d929e7e288fef172
     ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
     count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
-<<<<<<< HEAD
+
     return render(request, './ticket/home.html', {'Ticket': ticket,'Category': co, 
                       'system_name': SYSTEM_NAME, 'user': user,'count':count, 
                       'datetime': datetime.datetime.now(), 'state': args[0],args[4]:'active', 'employee':args[5], 'quick_search': True})
-=======
-    # for x in ticket:
-    #   print x.id
-    return render(request, './ticket/home.html', {'Ticket': ticket,'Category': co,
-                      'system_name': SYSTEM_NAME, 'user': user,'count':count,
-                      'datetime': datetime.datetime.now(), 'state': args[0],args[4]:'active', 'employee':args[5]})
->>>>>>> 82aec7a868228f76b0ca47e6d929e7e288fef172
 
 
 @login_required(login_url='/')
@@ -101,8 +89,6 @@ def open_ticket(request):
 
 
 @login_required(login_url='/')
-<<<<<<< HEAD
-=======
 def search_ticket(request):
    category_filter = request.GET.get('ticket_search_filters')
    search = request.GET.get('seach_ticket')
@@ -116,7 +102,6 @@ def search_ticket(request):
 
 
 @login_required(login_url='/')
->>>>>>> 82aec7a868228f76b0ca47e6d929e7e288fef172
 def advance_search_ticket(request):
     category = request.GET.get('category_advance')
     subject = request.GET.get('subject_advance')
@@ -197,7 +182,6 @@ def save_ticket(request):
     requestor = request.POST.get('requestor_choose')
     created_user = request.user.id
     stat = request.POST.get('status_choose')
-    # print requestor
     if ticket_edit == '':
        if assign_user == 'blank' or Ticket.objects.filter(requester_id=requestor,category_id=category,assigned=assign_user).exists() and Ticket.objects.filter(subject=subjects):
          return HttpResponseRedirect('/openticket/')
@@ -266,15 +250,15 @@ def view_ticket(request, pk):
     attachment = Attachment.objects.filter(ticket_id=pk)
     count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
-<<<<<<< HEAD
+# <<<<<<< HEAD
     employee = Employee.objects.get(user_id=request.user.id)
-    return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,'ticket': t,'user': user, 
-              'Comment':c, 'count':count, 'form': form, 'employee':employee, 'documents': document, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
-=======
+#     return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,'ticket': t,'user': user, 
+#               'Comment':c, 'count':count, 'form': form, 'employee':employee, 'documents': document, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
+# =======
     return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,'ticket': t,'user': user,
-              'Comment':c, 'count':count, 'form': form, 'attachments': attachment, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
+              'Comment':c, 'count':count, 'form': form, 'employee':employee, 'attachments': attachment, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
 
->>>>>>> 82aec7a868228f76b0ca47e6d929e7e288fef172
+# >>>>>>> 82aec7a868228f76b0ca47e6d929e7e288fef172
 
 @login_required(login_url='/')
 def edit_ticket(request, pk):
@@ -343,8 +327,7 @@ def set_comment(request):
     c=Comment.objects.create(comment=com,user_id=request.user.id, ticket_id = ticket_id)
     c.save()
     co=Comment.objects.filter(ticket_id=ticket_id).order_by('-created')
-    #ss='<div> <h1>'+com+'</h1></div>'
-    #return HttpResponse(s)
+
     return render_to_response('ticket/comment_detail.html', {'Comment': co,
                               'datetime':datetime.datetime.now()}, context)
 

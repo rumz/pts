@@ -48,7 +48,7 @@ def populate_users():
 # Start execution here!
 if __name__ == '__main__':
     print "Starting Tickets population script..."
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'philhealth.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pts.settings')
     from tickets.models import Category
     populate()
 
