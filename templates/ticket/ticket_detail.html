@@ -10,24 +10,24 @@
                 <h5>Ticket date created: <b> {{ticket.created|timesince}} ago  </b></h5>
         {% else %}
             {% ifequal ticket.created|date:'a' 'a.m.'%}
-                <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am</b></h5> 
+                <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am</b></h5>
             {% else %}
                 <h5>Ticket date created: <b> {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}pm</b></h5>
             {% endifequal %}
-            
+
         {% endifequal %}
     {% else %}
         {% ifequal ticket.created|date:'a' 'a.m.'%}
-            <h5>Ticket date created: <b> {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am</b></h5> 
+            <h5>Ticket date created: <b> {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am</b></h5>
         {% else %}
-            <h5>Ticket date created: <b> {{ticket.created.date}} at {{ticket.created|date:'h:m'}}pm</b></h5> 
+            <h5>Ticket date created: <b> {{ticket.created.date}} at {{ticket.created|date:'h:m'}}pm</b></h5>
         {% endifequal %}
     {% endifequal %}
     <h5>Ticket age: <b> {{ticket_age}}</b></h5>
-   
-    <h5>Assigned User:<b> {{ticket.assign_user.get_full_name}}</b></h5>
+
+    <h5>Assigned User:<b> {{ticket.assigned.get_full_name}}</b></h5>
     <h5>Category: <b>{{ticket.category}}</b> </h5>
-    <h5>Requester: <b>{{ticket.user_requestor.get_full_name}}</b> </h5>
+    <h5>Requester: <b>{{ticket.requester.get_full_name}}</b> </h5>
     {% if ticket.status%}
     	<h5>Status:<b> Open</b> </h5>
     {% else %}
@@ -38,7 +38,7 @@
 		<br>
         	<button type="submit" class="btn btn-success">Edit</button> &nbsp;
         	{% if com_button %}
-        	 <button  type="button" id="add_bill_button" data-toggle="modal" data-target="#add_bill" class="btn btn-success">Add Comment</button> &nbsp; 
+        	 <button  type="button" id="add_bill_button" data-toggle="modal" data-target="#add_bill" class="btn btn-success">Add Comment</button> &nbsp;
              {% if ticket.status%}
                 <a class="btn btn-success" href="/close_status_ticket/{{ticket.id}}/">Close Ticket</a>
              {% else %}
@@ -47,8 +47,8 @@
             {% endif %}
 
      </div>
- <br>
-    <h4 >Comments:</h4>
+ <br><br>
+    <h4 ><strong> Comments:</strong></h4>
 </form>
 
 </div>

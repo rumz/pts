@@ -4,19 +4,23 @@ from django.contrib.auth.models import User
 
 
 class TimeStampedModel(models.Model):
-  created = models.DateTimeField(auto_now_add=True)
-  modified = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
 
-  class Meta:
-    abstract = True
+    class Meta:
+        abstract = True
 
 
 class Category(TimeStampedModel):
-  name = models.CharField(max_length=128, unique=True)
-  description = models.TextField(default='')
+    name = models.CharField(max_length=128, unique=True)
+    description = models.TextField(default='')
 
-  def __unicode__(self):
-    return self.name
+    class Meta:
+        db_table = 'category'
+
+    def __unicode__(self):
+        return self.name
+
 
 class Employee(models.Model):
     user = models.OneToOneField(User)
@@ -25,56 +29,60 @@ class Employee(models.Model):
     address = models.CharField(max_length=100, blank=True)
     image_path = models.FileField(upload_to='profile_pics/', default ='profile_pics/default_male.png')
 
+    class Meta:
+        db_table = 'employee'
+
     def __unicode__(self):
-      return self.user.username
+        return self.user.username
+
 
 class Ticket(TimeStampedModel):
-  choice=((1,'Open'),
-           (0,'Closed'))
-  flags=((1,'unRead'),
-         (0,'Read'))
+    subject = models.CharField(max_length=200)
+    description = models.TextField(default='')
+    requester = models.ForeignKey(User, related_name = 'requester')
+    status = models.BooleanField()
+    priority = models.IntegerField()
+    category = models.ForeignKey(Category)
+    created_by = models.ForeignKey(User, related_name = 'created_by')
+    assigned = models.ForeignKey(User, related_name = 'assigned_user')
+    flag = models.BooleanField()
 
-  subject = models.CharField(max_length=200)
-  description = models.TextField(default='')
-  user_requestor = models.ForeignKey(User, related_name = 'ticket_requestor')
-  status = models.BooleanField(choices=choice)
-  priority = models.IntegerField()
-  category = models.ForeignKey(Category)
-  created_by = models.ForeignKey(User, related_name = 'ticket_created')
-  assign_user = models.ForeignKey(User, related_name = 'ticket_assign')
-  flag = models.BooleanField(choices=flags)
-  def __unicode__(self):
-    return self.id
+    class Meta:
+        db_table = 'ticket'
 
-  def get_absolute_url(self):
-    return reverse('tickets-detail', kwargs={'pk': self.id})
+    def __unicode__(self):
+        return self.id
+
+    def get_absolute_url(self):
+        return reverse('tickets-detail', kwargs={'pk': self.id})
+
 
 class TicketAge(TimeStampedModel):
-  choices=((1,'done'),
-         (0,'undone'))
-  assign_user = models.ForeignKey(User)
-  ticket = models.ForeignKey(Ticket)
-  done = models.BooleanField(choices=choices)
-
-class Document(TimeStampedModel):
+    assign_user = models.ForeignKey(User)
     ticket = models.ForeignKey(Ticket)
-    name = models.CharField(max_length=200)
-    docfile = models.FileField(upload_to='documents/%Y/%m/%d')
+    done = models.BooleanField()
+
+    class Meta:
+        db_table = 'ticketage'
+
+
+class Attachment(TimeStampedModel):
+    ticket  = models.ForeignKey(Ticket)
+    name    = models.CharField(max_length=200)
+    docfile = models.FileField(upload_to='attachments/%Y/%m/%d')
     user    = models.ForeignKey(User)
 
+    class Meta:
+        db_table = 'attachment'
+
+
 class Comment(TimeStampedModel):
-  ticket  = models.ForeignKey(Ticket)
-  comment = models.TextField()
-  user    = models.ForeignKey(User)
-  
+    ticket  = models.ForeignKey(Ticket)
+    comment = models.TextField()
+    user    = models.ForeignKey(User)
 
-  def __unicode__(self):
-    return self.comment
+    class Meta:
+        db_table = 'comment'
 
-
-# class Attachment(TimeStampedModel):
-#   ticket = models.ForeignKey(Ticket)
-#   path = models.CharField(max_length=255)
-
-#   def __unicode__(self):
-#     return self.path
+    def __unicode__(self):
+        return self.comment

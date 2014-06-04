@@ -8,14 +8,14 @@
 	  			<td><input style="width: 370px;  " id='ticket_subject' name="ticket_subject" type="text" placeholder="Subject" class="form-control"  value="{{ticket.subject}}" ></td>
 	  		</tr>
 	  	</table>
-			
+
 
 		</div>
 		<div>
 			<h5>Description:&nbsp;</h5>
-			<textarea class="form-control" id="pad" style="height: 200px; width: 480px; max-height: 200px; 
+			<textarea class="form-control" id="pad" style="height: 200px; width: 480px; max-height: 200px;
         min-width: 480px; max-width: 480px" placeholder="Description" name="description"  >{{ticket.description}}</textarea>
-	
+
 		</div>
 		<div>
 		<table id="pad">
@@ -25,9 +25,9 @@
 					<select style="width: 250px; " class="btn btn-default dropdown-toggle" name="user_choose" id="user_choose"  type="radio" >
 					<option  value="blank" > </option>
 					  {% for user in Users %}
-					    {% if ticket.assign_user_id == user.id %}
+					    {% if ticket.assigned_id == user.id %}
 						<option  value="{{user.id}}" selected>{{user.get_full_name}} </option>
-					
+
 						{% else %}
 						<option  value="{{user.id}}">{{user.get_full_name}} </option>
 						{% endif %}
@@ -50,35 +50,35 @@
 				</td>
 			</tr>
 			<tr>
-				<td>Requestor:</td>
+				<td>Requester:</td>
 				<td>
 					<select style="width: 250px; " class="btn btn-default dropdown-toggle" id="requestor_choose" name="requestor_choose" type="radio" >
 					  {% for users in Users %}
 					  {% if edit %}
-					    {% if ticket.user_requestor_id == users.id %}
+					    {% if ticket.requester_id == users.id %}
 							<option value="{{users.id}}" selected  >{{users.get_full_name}}  </option>
 						{% else %}
 							<option value="{{users.id}}">{{users.get_full_name}}  </option>
 						{% endif %}
-					  	
+
 					  {% else %}
 					  	{% if users.id == user.id %}
 							<option value="{{users.id}}" selected  >{{users.get_full_name}}  </option>
 						{% else %}
 							<option value="{{users.id}}">{{users.get_full_name}}  </option>
 						{% endif %}
-					  
+
 					  {% endif %}
-					  {% endfor %} 
-					</select>			
+					  {% endfor %}
+					</select>
 				</td>
 			</tr>
 		</table>
 		</div>
-		
+
 		<div id="pad">
 		<br>
-        	<button type="submit" class="btn btn-success">Save</button> &nbsp;<!-- 
+        	<button type="submit" class="btn btn-success">Save</button> &nbsp;<!--
         	{% if com_button %}
         	 <button  type="button" id="add_bill_button" data-toggle="modal" data-target="#add_bill" class="btn btn-success">Add Comment</button>
         	{% endif %} -->
