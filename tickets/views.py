@@ -497,6 +497,5 @@ def advance_search(request):
     return render(request, './ticket/advance_search.html', data)
 
 
-@login_required(login_url='/')
 def microseconds(time):
     return time[0:time.find('.')]
