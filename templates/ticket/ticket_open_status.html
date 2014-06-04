@@ -1,7 +1,6 @@
    <tbody>
-        {% for ticket in Ticket %}
-           {% if ticket.status == True and ticket.assigned_id == user.id %}
-            <tr >
+        {% for ticket in Ticket.object_list %}
+         <tr >
                 <td><div class="concat subject">
                     <a href="/ticketdetailed/{{ticket.id}}/">{{ ticket.subject }}</a>
                     </div>
@@ -55,6 +54,5 @@
                 </div>
                 </td>
             </tr>
-            {% endif %}
         {% endfor %}
     </tbody>

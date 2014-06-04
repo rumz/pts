@@ -58,7 +58,7 @@ class Ticket(TimeStampedModel):
 
 
 class TicketAge(TimeStampedModel):
-    assign_user = models.ForeignKey(User)
+    assigned = models.ForeignKey(User)
     ticket = models.ForeignKey(Ticket)
     done = models.BooleanField()
 

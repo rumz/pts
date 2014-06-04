@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from .models import TicketAge
 from .models import Category
@@ -63,15 +64,47 @@ def closed_tickets(request):
 
 
 def home(request, *args):
-    search = request.GET.get('seach_ticket')
-    co = Category.objects.all()  
-    ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
-    count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
-    user = User.objects.get(id=request.user.id)
+    data = {'system_name' : SYSTEM_NAME}
+    try: 
+        search = request.GET.get('seach_ticket')
+        
+       
+        co = Category.objects.all()  
+        if args[0] == 'open_status':
+            ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created']).filter(status=True,assigned_id=request.user.id)
+        else:
+            ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
+        count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
+        user = User.objects.get(id=request.user.id)
+        
+        queries_without_page = request.GET.copy()
 
-    return render(request, './ticket/home.html', {'Ticket': ticket,'Category': co, 
-                      'system_name': SYSTEM_NAME, 'user': user,'count':count, 
-                      'datetime': datetime.datetime.now(), 'state': args[0],args[4]:'active', 'employee':args[5], 'quick_search': True})
+        if queries_without_page.has_key('page'):
+            del queries_without_page['page']
+
+        paginator = Paginator(ticket, 20)
+        try: page = int(request.GET.get("page", '1'))
+        except ValueError: page = 1
+
+        try:
+            ticket = paginator.page(page)
+        except (InvalidPage, EmptyPage):
+            ticket = paginator.page(paginator.num_pages)
+    except:
+        print sys.exc_info()[0], sys.exc_info()[1]
+
+    data['Ticket'] = ticket
+    data['Category'] = co
+    data['user'] = user
+    data['count'] = count
+    data['datetime'] = datetime.datetime.now()
+    data['state'] = args[0]
+    data[args[4]] = 'active'
+    data['employee'] = args[5]
+    data['quick_search'] = True
+    data['query_params'] = queries_without_page
+
+    return render(request, './ticket/home.html',data)
 
 
 @login_required(login_url='/')
@@ -118,14 +151,14 @@ def advance_search_ticket(request):
         return HttpResponseRedirect('/advance_search')
     else:
         if subject != '':
-            query = " subject like '"+ subject+"%%'"
+            query = " subject like '%%"+ subject+"%%'"
             first = False
         if description != '':
             if first:
-                query += " description like '"+ description+"%%'"
+                query += " description like '%%"+ description+"%%'"
                 first = False
             else:
-                query += " and description like '"+ description+"%%'"
+                query += " and description like '%%"+ description+"%%'"
         if ticket_status:
             if first:
                 query += " status = True"
@@ -166,7 +199,7 @@ def advance_search_ticket(request):
 @login_required(login_url='/')
 def view_profile(request, pk):
    employee = Employee.objects.get(user_id=pk)
-   count = Ticket.objects.filter(flag=True,assign_user_id=request.user.id ).count()
+   count = Ticket.objects.filter(flag=True,assigned_id=request.user.id ).count()
    user = User.objects.get(id=request.user.id)
    print employee.image_path
    return render(request, './employee_profile.html', {'system_name': SYSTEM_NAME, 'user': user,'employee':employee, 'count':count})
@@ -190,7 +223,7 @@ def save_ticket(request):
          ticket = Ticket(subject=subjects, description=description, requester_id=requestor, status=1,flag=1, priority=2, category_id=category, created_by_id=created_user, assigned_id=assign_user)
          ticket.save()
          ticket=Ticket.objects.latest('id')
-         ticket_age= TicketAge(assign_user_id=assign_user, ticket_id=ticket.id, done=True)
+         ticket_age= TicketAge(assigned_id=assign_user, ticket_id=ticket.id, done=True)
          ticket_age.save()
          c = Comment(comment='Subject: '+ subjects +' \n\n Description:\n '+description+'\n\n Assigned User: '+ ticket.assigned.get_full_name()+'\n\n Category: '+ticket.category.name+'\n\n Requester: '+ticket.requester.get_full_name(), user_id = created_user, ticket_id=ticket.id)
          c.save()
@@ -220,7 +253,7 @@ def save_ticket(request):
             if ticket.assigned_id != int(assign_user):
                 user = User.objects.get(id=assign_user)
                 TicketAge.objects.filter(ticket_id=ticket_edit).update(modified=datetime.datetime.now(), done=False)
-                t=TicketAge(assign_user_id=assign_user,ticket_id=ticket_edit, done=True)
+                t=TicketAge(assigned_id=assign_user,ticket_id=ticket_edit, done=True)
                 t.save()
                 comments += 'Assigned User: "'+ user.get_full_name() + '" '
                 Ticket.objects.filter(id=ticket_edit).update(assigned=assign_user, flag=True)
@@ -235,15 +268,16 @@ def view_ticket(request, pk):
     open_button=True
     form = DocumentForm()
     t = Ticket.objects.get(id=pk)
+    print pk
+    print pk
     if t.status:
-      query="Select *, justify_hours(age(now(),created) ) AS hours FROM ticketage where ticket_id="+ pk +" and done=True and assign_user_id=" + str(t.assigned_id)
+      query="Select *, justify_hours(age(now(),created) ) AS hours FROM ticketage where ticket_id="+ pk +" and done=True and assigned_id=" + str(t.assigned_id)
     else:
-      query="Select *, justify_hours(age(modified,created) ) AS hours FROM ticketage where ticket_id="+ pk +" and assign_user_id=" + str(t.assigned_id)
-    print "t.assigned", t.assigned
+      query="Select *, justify_hours(age(modified,created) ) AS hours FROM ticketage where ticket_id="+ pk +" and assigned_id=" + str(t.assigned_id)
+    print "t.assigned", t.assigned_id
     ticket_age=TicketAge.objects.raw(query)
     for x in ticket_age:
-      print x.id
-      time=microseconds(str(x.hours))
+        time=microseconds(str(x.hours))
     if request.user.id == t.assigned_id:
       Ticket.objects.filter(id=pk).update(flag=False)
     c = Comment.objects.filter(ticket_id=pk).order_by('-created')
@@ -282,7 +316,7 @@ def close_status_ticket(request,pk):
    c = Comment(comment='Ticket Closed.', user_id=request.user.id, ticket_id=pk)
    ticket=Ticket.objects.get(id=pk)
    Ticket.objects.filter(id=pk).update(status=False, flag=True, modified=datetime.datetime.now())
-   TicketAge.objects.filter(ticket_id=pk, assign_user_id=ticket.assigned, done=True).update(done=False, modified=datetime.datetime.now())
+   TicketAge.objects.filter(ticket_id=pk, assigned_id=ticket.assigned, done=True).update(done=False, modified=datetime.datetime.now())
    c.save()
    return HttpResponseRedirect('/ticketdetailed/'+pk+'/')
 
@@ -291,7 +325,7 @@ def open_status_ticket(request,pk):
    c = Comment(comment='Ticket Re-opened.', user_id = request.user.id, ticket_id=pk)
    t=Ticket.objects.get(id=pk)
    Ticket.objects.filter(id=pk).update(status=True, flag=True)
-   t = TicketAge(ticket_id=pk, done=True, assign_user_id=t.assigned_id)
+   t = TicketAge(ticket_id=pk, done=True, assigned_id=t.assigned_id)
    t.save()
    c.save()
    return HttpResponseRedirect('/ticketdetailed/'+pk+'/')
