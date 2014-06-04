@@ -52,17 +52,17 @@ def ticketing_login(request, *args):
          return render(request,'login.html',{'form': form,'system_name': 'Phlhealth ARMM Ticketing System',
                      'cover_url':'static/images/19th_logo.jpg'})
 
-
+@login_required(login_url='/')
 def all_tickets(request):
     employee = Employee.objects.get(user_id=request.user.id)
     return home(request, 'all_tickets','','',False,'all_ticket',employee)
 
-
+@login_required(login_url='/')
 def closed_tickets(request):
     employee = Employee.objects.get(user_id=request.user.id)
     return home(request, 'closed_tickets','','',False,'closed',employee)
 
-
+@login_required(login_url='/')
 def home(request, *args):
     data = {'system_name' : SYSTEM_NAME}
     try: 
@@ -109,29 +109,44 @@ def home(request, *args):
 
 @login_required(login_url='/')
 def open_ticket(request):
-   openticket = True
-   status = False
-   co = Category.objects.all()
-   employee = Employee.objects.get(user_id=request.user.id)
-   users = User.objects.all()
-   user = User.objects.get(id=request.user.id)
-   count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
+    data = {'system_name' : SYSTEM_NAME}
+    openticket = True
+    status = False
+    co = Category.objects.all()
+    employee = Employee.objects.get(user_id=request.user.id)
+    users = User.objects.all()
+    user = User.objects.get(id=request.user.id)
+    count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
+    data['user'] = user
+    data['Category'] = co
+    data['open_ticket'] = 'active'
+    data['Users'] = users
+    data['count'] = count
+    data['open'] = openticket
+    data['status'] = status
+    data['employee'] = employee
 
-   return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,
-                'user': user,'Category': co,'open_ticket':'active', 'Users':users, 'count':count, 'open': openticket, 'status': status, 'employee':employee})
+    return render(request,'./ticket/tickets.html', data)
 
 
 @login_required(login_url='/')
 def search_ticket(request):
-   category_filter = request.GET.get('ticket_search_filters')
-   search = request.GET.get('seach_ticket')
-   state = request.GET.get('state')
-   co = Category.objects.all()
-   ticket = Ticket.objects.filter(category=category_filter, subject__istartswith=search).extra(select = {'age':'weekdays(created::date,now()::date)'})
-   count = Ticket.objects.filter(flag=True, assigned_id=request.user.id ).count()
-   user = User.objects.get(id=request.user.id)
-   return render(request, './ticket/home.html', {'Ticket': ticket,'Category': co,
-                'system_name': SYSTEM_NAME, 'user': user,'count':count, 'state':state})
+    data = {'system_name' : SYSTEM_NAME}
+    category_filter = request.GET.get('ticket_search_filters')
+    search = request.GET.get('seach_ticket')
+    state = request.GET.get('state')
+    co = Category.objects.all()
+    ticket = Ticket.objects.filter(category=category_filter, subject__istartswith=search).extra(select = {'age':'weekdays(created::date,now()::date)'})
+    count = Ticket.objects.filter(flag=True, assigned_id=request.user.id ).count()
+    user = User.objects.get(id=request.user.id)
+    data['user'] = user
+    data['Category'] = co
+    data['state'] = state
+    data['Ticket'] = ticket
+    data['count'] = count
+   
+
+    return render(request, './ticket/home.html', data)
 
 
 @login_required(login_url='/')
@@ -151,7 +166,8 @@ def advance_search_ticket(request):
     if subject == '' and description == '' and ticket_status == '' and assign_user == '' and category == '' and requestor == '':
         return HttpResponseRedirect('/advance_search')
     else:
-        try:      
+        data = {'system_name' : SYSTEM_NAME}   
+        try:
             if subject != '':
                 query = " subject like '%%"+ subject+"%%'"
                 first = False
@@ -192,14 +208,14 @@ def advance_search_ticket(request):
                 else:
                     query += " and requester_id = "+requestor
 
-
             ticket = Ticket.objects.raw("Select *, weekdays(created::date,now()::date) as age From ticket where "+query)
-                    queries_without_page = request.GET.copy()
+            
+            queries_without_page = request.GET.copy()
 
             if queries_without_page.has_key('page'):
                 del queries_without_page['page']
 
-            paginator = Paginator(ticket, 20)
+            paginator = Paginator(ticket, 5)
             try: page = int(request.GET.get("page", '1'))
             except ValueError: page = 1
 
@@ -207,13 +223,17 @@ def advance_search_ticket(request):
                 ticket = paginator.page(page)
             except (InvalidPage, EmptyPage):
                 ticket = paginator.page(paginator.num_pages)
-                
-            return render(request, './ticket/advance_search_result.html', {'Ticket': ticket, 'count':count,
-                    'system_name': SYSTEM_NAME, 'state':'all_tickets', 'employee': employee})
-
         except:
-              print sys.exc_info()[0], sys.exc_info()[1]
-            
+              print sys.exc_info()[0], sys.exc_info()[1]    
+
+        data['Ticket'] = ticket
+        data['count'] = count
+        data['state'] = 'all_tickets'
+        data['employee'] = employee
+        data['query_params'] = queries_without_page
+        
+        return render(request, './ticket/advance_search_result.html', data)
+
 @login_required(login_url='/')
 def view_profile(request, pk):
    employee = Employee.objects.get(user_id=pk)
@@ -283,6 +303,7 @@ def save_ticket(request):
 
 @login_required(login_url='/')
 def view_ticket(request, pk):
+    data = {'system_name' : SYSTEM_NAME}   
     open_button=True
     form = DocumentForm()
     t = Ticket.objects.get(id=pk)
@@ -302,18 +323,25 @@ def view_ticket(request, pk):
     attachment = Attachment.objects.filter(ticket_id=pk)
     count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
-# <<<<<<< HEAD
     employee = Employee.objects.get(user_id=request.user.id)
-#     return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,'ticket': t,'user': user, 
-#               'Comment':c, 'count':count, 'form': form, 'employee':employee, 'documents': document, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
-# =======
-    return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,'ticket': t,'user': user,
-              'Comment':c, 'count':count, 'form': form, 'employee':employee, 'attachments': attachment, 'com_button':open_button,'ticket_age':time, 'datetime':datetime.datetime.now()})
 
-# >>>>>>> 82aec7a868228f76b0ca47e6d929e7e288fef172
+    data['ticket'] = t
+    data['user'] = user
+    data['Comment'] = c
+    data['count'] = count
+    data['form'] = form
+    data['employee'] = employee
+    data['attachments'] = attachment
+    data['com_button'] = open_button
+    data['ticket_age'] = time
+    data['datetime'] = datetime.datetime.now()
+
+    return render(request,'./ticket/tickets.html', data)
+
 
 @login_required(login_url='/')
 def edit_ticket(request, pk):
+  data = {'system_name' : SYSTEM_NAME}   
   edit_open=True
   co = Category.objects.all()
   users = User.objects.all()
@@ -325,8 +353,19 @@ def edit_ticket(request, pk):
   attachment = Attachment.objects.filter(ticket_id=pk)
   count = Ticket.objects.filter(flag=True, assigned_id=request.user.id).count()
   user = User.objects.get(id=request.user.id)
-  return render(request,'./ticket/tickets.html', {'system_name': SYSTEM_NAME,
-              'ticket': t,'user': user, 'Category': co, 'Users':users,'Comment':c,'edit': edit_open ,'count':count,'open':edit_open,'form': form, 'attachments': attachment})
+ 
+  data['ticket'] = t
+  data['user'] = user
+  data['Category'] = co
+  data['Users'] = users
+  data['Comment'] = c
+  data['edit'] = edit_open
+  data['count'] = count
+  data['open'] = edit_open
+  data['form'] = form
+  data['attachments'] = attachment
+
+  return render(request,'./ticket/tickets.html', data)
 
 
 @login_required(login_url='/')
@@ -340,41 +379,57 @@ def close_status_ticket(request,pk):
 
 
 def open_status_ticket(request,pk):
-   c = Comment(comment='Ticket Re-opened.', user_id = request.user.id, ticket_id=pk)
-   t=Ticket.objects.get(id=pk)
-   Ticket.objects.filter(id=pk).update(status=True, flag=True)
-   t = TicketAge(ticket_id=pk, done=True, assigned_id=t.assigned_id)
-   t.save()
-   c.save()
-   return HttpResponseRedirect('/ticketdetailed/'+pk+'/')
+    c = Comment(comment='Ticket Re-opened.', user_id = request.user.id, ticket_id=pk)
+    t=Ticket.objects.get(id=pk)
+    Ticket.objects.filter(id=pk).update(status=True, flag=True)
+    t = TicketAge(ticket_id=pk, done=True, assigned_id=t.assigned_id)
+    t.save()
+    c.save()
+    return HttpResponseRedirect('/ticketdetailed/'+pk+'/')
 
 
 @login_required(login_url='/')
 def view_notification(request):
+    data = {'system_name' : SYSTEM_NAME}
     t = Ticket.objects.filter(assigned=request.user.id)
     count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     employee = Employee.objects.get(user_id=request.user.id)
-    return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
-                  'ticket': t,'user': user,'employee': employee, 'count':count, 'notification':'active', 'datetime':datetime.datetime.now(), 'quick_search': True})
+    
+    data['ticket'] = t
+    data['user'] = user
+    data['employee'] = employee
+    data['count'] = count
+    data['notification'] = 'active'
+    data['datetime'] = datetime.datetime.now()
+    data['quick_search'] = True
+    
+    return render(request,'./ticket/notification.html', data)
 
 
 @login_required(login_url='/')
 def view_request(request):
+    data = {'system_name' : SYSTEM_NAME}
     t = Ticket.objects.filter(requester=request.user.id)
     count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     employee = Employee.objects.get(user_id=request.user.id)
-    return render(request,'./ticket/notification.html', {'system_name': SYSTEM_NAME,
-                  'ticket': t,'user': user, 'employee':employee, 'request':'active', 'count':count, 'datetime':datetime.datetime.now(),'quick_search': True})
 
+    data['ticket'] = t
+    data['user'] = user
+    data['employee'] = employee
+    data['count'] = count
+    data['notification'] = 'active'
+    data['datetime'] = datetime.datetime.now()
+    data['quick_search'] = True
+    
+    return render(request,'./ticket/notification.html', data)
 
 @login_required(login_url='/')
 def set_comment(request):
     context = RequestContext(request)
     com = request.GET.get('_comment')
     ticket_id = request.GET.get('_ticket')
-    print ticket_id
     Ticket.objects.filter(id=ticket_id).update(flag=True)
     c=Comment.objects.create(comment=com,user_id=request.user.id, ticket_id = ticket_id)
     c.save()
@@ -402,6 +457,7 @@ def tickets_request(request,pk):
                   'ticket': t,'user': user, 'count':count})
 
 
+@login_required(login_url='/')
 def upload(request,pk):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
@@ -415,6 +471,7 @@ def upload(request,pk):
     return HttpResponseRedirect('/ticketdetailed/'+pk+'/')
 
 
+@login_required(login_url='/')
 def about(request):
     employee = Employee.objects.get(user_id=request.user.id)
     count = Ticket.objects.filter(flag=True,assigned_id=request.user.id).count()
@@ -422,15 +479,24 @@ def about(request):
     return render(request, './about_us.html', {'system_name': SYSTEM_NAME, 'user': user,'count':count, 'employee':employee})
 
 
+@login_required(login_url='/')
 def advance_search(request):
+    data = {'system_name' : SYSTEM_NAME}
     category = Category.objects.all()
     ticket = Ticket.objects.all()
     count = Ticket.objects.filter(flag=True,assigned_id=request.user.id ).count()
     user = User.objects.all()
     employee = Employee.objects.get(user_id=request.user.id)
-    return render(request, './ticket/advance_search.html', {'Ticket': ticket,'Category': category,
-                      'system_name': SYSTEM_NAME, 'employee':employee, 'users': user, 'count':count})
+    
+    data['Ticket'] = ticket
+    data['Category'] = category
+    data['employee'] = employee
+    data['users'] = user
+    data['count'] = count
+
+    return render(request, './ticket/advance_search.html', data)
 
 
+@login_required(login_url='/')
 def microseconds(time):
     return time[0:time.find('.')]
