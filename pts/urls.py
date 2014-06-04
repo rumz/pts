@@ -52,7 +52,7 @@ urlpatterns = patterns('',
     url(r'alltickets$',all_tickets),
     url(r'closedtickets$',closed_tickets),
     url(r'advance_search$',advance_search),
-    url(r'advance_search_ticket?$',advance_search_ticket),
+    url(r'^advance_search_ticket?',advance_search_ticket),
     url(r'^logout/$',logout, {'next_page':'/'} )
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

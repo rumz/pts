@@ -70,6 +70,9 @@ def home(request, *args):
     if args[0] == 'open_status':
         ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created']).filter(status=True,assigned_id=request.user.id)
         total_rows = ticket.count()
+    elif args[0] == 'closed_tickets':
+        ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created']).filter(status=False)
+        total_rows = ticket.count()
     else:
         ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
         total_rows = ticket.count()
@@ -193,14 +196,14 @@ def advance_search_ticket(request):
                 else:
                     query += " and requester_id = "+requestor
 
-            ticket = Ticket.objects.raw("Select *, weekdays(created::date,now()::date) as age From ticket where "+query)
-            
+            ticket = Ticket.objects.all().extra(select = {'age':'weekdays(created::date,now()::date)'}, where = [query])#raw("Select *, weekdays(created::date,now()::date) as age From ticket where "+query)
+            total_rows = ticket.count()
             queries_without_page = request.GET.copy()
 
             if queries_without_page.has_key('page'):
                 del queries_without_page['page']
 
-            paginator = Paginator(ticket, 5)
+            paginator = Paginator(ticket, 15)
             try: page = int(request.GET.get("page", '1'))
             except ValueError: page = 1
 
@@ -376,12 +379,16 @@ def open_status_ticket(request,pk):
 @login_required(login_url='/')
 def view_notification(request):
     data = {'system_name' : SYSTEM_NAME}
-    t = Ticket.objects.filter(assigned=request.user.id)
+    limit = 15
+    total_rows = 0
+    ticket = Ticket.objects.filter(assigned=request.user.id)
     count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     employee = Employee.objects.get(user_id=request.user.id)
-    
-    data['ticket'] = t
+    total_rows = ticket.count()
+    data['current_offset'] = request.GET.get('offset', 0)
+    data['offset_list'] = get_offsets(total_rows, limit)        
+    data['ticket'] = ticket[data['current_offset']: int(data['current_offset']) + limit]
     data['user'] = user
     data['employee'] = employee
     data['count'] = count
@@ -395,16 +402,20 @@ def view_notification(request):
 @login_required(login_url='/')
 def view_request(request):
     data = {'system_name' : SYSTEM_NAME}
-    t = Ticket.objects.filter(requester=request.user.id)
+    limit = 15
+    total_rows = 0
+    ticket = Ticket.objects.filter(requester=request.user.id)
     count = Ticket.objects.filter(flag=True, assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     employee = Employee.objects.get(user_id=request.user.id)
-
-    data['ticket'] = t
+    total_rows = ticket.count()
+    data['current_offset'] = request.GET.get('offset', 0)
+    data['offset_list'] = get_offsets(total_rows, limit)        
+    data['ticket'] = ticket[data['current_offset']: int(data['current_offset']) + limit]
     data['user'] = user
     data['employee'] = employee
     data['count'] = count
-    data['notification'] = 'active'
+    data['request'] = 'active'
     data['datetime'] = datetime.datetime.now()
     data['quick_search'] = True
     
