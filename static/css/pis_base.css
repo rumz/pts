@@ -198,7 +198,7 @@ div.concat{ overflow: hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ell
 }
 .navbar-success .navbar-nav > li > a:hover,
 .navbar-success .navbar-nav > li > a:focus {
-  /*color: #D6F00E;*/
+  color: #FFFFFF;
   background-color: #187016;
   /*background-color: transparent;*/
 }
