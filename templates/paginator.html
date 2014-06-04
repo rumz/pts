@@ -4,8 +4,9 @@
     <a href="">&laquo;</a>
   </li>
   {% for page_offset in offset_list %}
-      <li {% ifequal current_offset page_offset.offset %} class="active" {% endifequal %}>
-	<a href="?offset={{ page_offset.offset }}&options={{options}}&search={{search}}">{{ page_offset.page_num }}</a>
+      <li "{% ifequal current_offset page_offset.offset %} class="active" 
+            {% endifequal %}" >
+			<a href="?offset={{ page_offset.offset }}">{{ page_offset.page_num }}</a>
       </li>
   {% endfor %}
   <li><a href="">&raquo;</a></li>

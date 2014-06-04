@@ -19,10 +19,8 @@ from .models import Comment
 from .models import User
 from .models import Employee
 from .models import Attachment
-from helpers.helpers import *
 
 from tickets.forms import LogInForm, DocumentForm
-
 
 SYSTEM_NAME='PTS'
 
@@ -66,21 +64,18 @@ def closed_tickets(request):
 @login_required(login_url='/')
 def home(request, *args):
     data = {'system_name' : SYSTEM_NAME}
-    limit = 10
+    limit = 15
     total_rows = 0
-    try: 
-        search = request.GET.get('seach_ticket')
-        
-       
-        co = Category.objects.all()  
-        if args[0] == 'open_status':
-            ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created']).filter(status=True,assigned_id=request.user.id)
-        else:
-            ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
-        count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
-        user = User.objects.get(id=request.user.id)
-    except:
-        print sys.exc_info()[0], sys.exc_info()[1]
+    co = Category.objects.all()  
+    if args[0] == 'open_status':
+        ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created']).filter(status=True,assigned_id=request.user.id)
+        total_rows = ticket.count()
+    else:
+        ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
+        total_rows = ticket.count()
+    count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
+    user = User.objects.get(id=request.user.id)
+    
         
     data['current_offset'] = request.GET.get('offset', 0)
     data['offset_list'] = get_offsets(total_rows, limit)        
@@ -92,7 +87,6 @@ def home(request, *args):
     data['state'] = args[0]
     data[args[4]] = 'active'
     data['employee'] = args[5]
-    data['total_rows'] = total_rows
     data['quick_search'] = True
 
     return render(request, './ticket/home.html',data)
@@ -488,6 +482,32 @@ def advance_search(request):
     return render(request, './ticket/advance_search.html', data)
 
 
-@login_required(login_url='/')
 def microseconds(time):
     return time[0:time.find('.')]
+
+def prev_offset(of, lm):
+    if of-lm<0:
+        return of
+    else:
+        return of-lm
+
+def next_offset(of, lm, size):
+    if of+lm>size:
+        return of
+    else:
+        return of+lm
+
+
+def get_offsets(total_rows, limit):
+    offset_list = []
+    pages = 0
+    if total_rows%limit>0:
+        pages = (total_rows//limit) + 1
+    else:
+        pages = (total_rows//limit)
+    offset = 0
+    for i in range(pages):
+        offset_list.append({'page_num': (i+1),
+                            'offset'  : offset})
+        offset = offset + limit
+    return offset_list
