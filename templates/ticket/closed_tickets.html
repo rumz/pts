@@ -9,16 +9,16 @@
                 <td>
                 <div class="concat age" >
                     <a href="#">{{ticket.category}}</a>
-                </div>  
+                </div>
                 </td>
                 <td>
                 <div class="concat user">
-                    <a href="/assign_tickets/{{ticket.assign_user.id}}/"> {{ticket.assign_user.get_full_name}}</a>
+                    <a href="/assign_tickets/{{ticket.assigned.id}}/"> {{ticket.assigned.get_full_name}}</a>
                 </div>
                 </td>
                 <td>
                 <div class="concat user" >
-                    <a href="/requester_tickets/{{ticket.user_requestor.id}}/"> {{ticket.user_requestor.get_full_name}}</a>
+                    <a href="/requester_tickets/{{ticket.requester.id}}/"> {{ticket.requester.get_full_name}}</a>
                 </div>
                 </td>
                 <td>
@@ -28,19 +28,19 @@
                                 {{ticket.created|timesince}} ago
                             {% else %}
                                 {% ifequal ticket.created|date:'a' 'a.m.' %}
-                                    {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am     
+                                    {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}am
                                 {% else %}
                                     {{ticket.created|date:'M d'}} at {{ticket.created|date:'h:m'}}pm
                                 {% endifequal %}
-                            {% endifequal %}             
+                            {% endifequal %}
 
                         {% else %}
                             {% ifequal ticket.created|date:'a' 'a.m.' %}
-                                {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am     
+                                {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am
                             {% else %}
-                                {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am  
+                                {{ticket.created.date}} at {{ticket.created|date:'h:m'}}am
                             {% endifequal %}
-                      
+
                         {% endifequal %}
                 </div>
                 </td>

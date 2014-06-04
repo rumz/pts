@@ -1,11 +1,10 @@
 """
-Django settings for philhealth project.
+Django settings for pts project.
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
 SECRET_KEY = '-9v4^s0ft4^l_d_*lj%t9!=fjv0chek($ip30ungc-+%=i9j*)'
@@ -20,10 +19,6 @@ MEDIA_PATH = os.path.join(BASE_DIR, 'media')
 
 MEDIA_ROOT = MEDIA_PATH
 MEDIA_URL = '/media/'
-# (
-    
-#   #os.path.join(os.path.dirname(__file__), '..', 'media').replace('\\','/'),
-# )
 
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,
@@ -32,7 +27,7 @@ TEMPLATE_DIRS = (
 STATICFILES_DIRS = (
     STATIC_PATH,
 )
-#MEDIA_URL = '/media/'
+
 STATIC_URL = '/static/'
 
 LOGIN_URL = 'django.contrib.auth.views.login'
@@ -62,17 +57,17 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'philhealth.urls'
+ROOT_URLCONF = 'pts.urls'
 
-WSGI_APPLICATION = 'philhealth.wsgi.application'
+WSGI_APPLICATION = 'pts.wsgi.application'
 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'philhealth',
+        'NAME': 'pts_armm',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'PASSWORD': '1',
         'HOST': 'localhost'
     }
 }
@@ -80,10 +75,8 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Hong_Kong'
-#TIME_ZONE = 'America/Chicago'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
