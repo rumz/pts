@@ -147,55 +147,73 @@ def advance_search_ticket(request):
     user = User.objects.get(id=request.user.id)
     query=''
     first = True
+
     if subject == '' and description == '' and ticket_status == '' and assign_user == '' and category == '' and requestor == '':
         return HttpResponseRedirect('/advance_search')
     else:
-        if subject != '':
-            query = " subject like '%%"+ subject+"%%'"
-            first = False
-        if description != '':
-            if first:
-                query += " description like '%%"+ description+"%%'"
+        try:      
+            if subject != '':
+                query = " subject like '%%"+ subject+"%%'"
                 first = False
-            else:
-                query += " and description like '%%"+ description+"%%'"
-        if ticket_status:
-            if first:
-                query += " status = True"
-                first = False
-            else:
-                query += " and status = True"
-        if ticket_status == 'close':
-            if first:
-                query += " status = False"
-                first = False
-            else:
-                query += " and status = False"
-        if assign_user != '':
-            if first:
-                query += " assigned_id = "+ assign_user
-                first = False
-            else:
-                query += " and assigned_id = "+ assign_user
-        if category != '':
-            if first:
-                query += " category_id = "+category
-                first = False
-            else:
-                query += " and category_id = "+category
-        if requestor != '':
-            if first:
-                query += " requester_id = "+requestor
-                first = False
-            else:
-                query += " and requester_id = "+requestor
+            if description != '':
+                if first:
+                    query += " description like '%%"+ description+"%%'"
+                    first = False
+                else:
+                    query += " and description like '%%"+ description+"%%'"
+            if ticket_status:
+                if first:
+                    query += " status = True"
+                    first = False
+                else:
+                    query += " and status = True"
+            if ticket_status == 'close':
+                if first:
+                    query += " status = False"
+                    first = False
+                else:
+                    query += " and status = False"
+            if assign_user != '':
+                if first:
+                    query += " assigned_id = "+ assign_user
+                    first = False
+                else:
+                    query += " and assigned_id = "+ assign_user
+            if category != '':
+                if first:
+                    query += " category_id = "+category
+                    first = False
+                else:
+                    query += " and category_id = "+category
+            if requestor != '':
+                if first:
+                    query += " requester_id = "+requestor
+                    first = False
+                else:
+                    query += " and requester_id = "+requestor
 
 
-        ticket = Ticket.objects.raw("Select *, weekdays(created::date,now()::date) as age From ticket where "+query)
+            ticket = Ticket.objects.raw("Select *, weekdays(created::date,now()::date) as age From ticket where "+query)
+                    queries_without_page = request.GET.copy()
 
-        return render(request, './ticket/advance_search_result.html', {'Ticket': ticket, 'count':count,
+            if queries_without_page.has_key('page'):
+                del queries_without_page['page']
+
+            paginator = Paginator(ticket, 20)
+            try: page = int(request.GET.get("page", '1'))
+            except ValueError: page = 1
+
+            try:
+                ticket = paginator.page(page)
+            except (InvalidPage, EmptyPage):
+                ticket = paginator.page(paginator.num_pages)
+                
+            return render(request, './ticket/advance_search_result.html', {'Ticket': ticket, 'count':count,
                     'system_name': SYSTEM_NAME, 'state':'all_tickets', 'employee': employee})
 
+        except:
+              print sys.exc_info()[0], sys.exc_info()[1]
+            
 @login_required(login_url='/')
 def view_profile(request, pk):
    employee = Employee.objects.get(user_id=pk)
