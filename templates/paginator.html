@@ -1,0 +1,13 @@
+{% if offset_list %}
+<ul class="pagination">
+  <li {%  ifequal current_offset 0 %} class="disabled" {% endifequal %}>
+    <a href="">&laquo;</a>
+  </li>
+  {% for page_offset in offset_list %}
+      <li {% ifequal current_offset page_offset.offset %} class="active" {% endifequal %}>
+	<a href="?offset={{ page_offset.offset }}&options={{options}}&search={{search}}">{{ page_offset.page_num }}</a>
+      </li>
+  {% endfor %}
+  <li><a href="">&raquo;</a></li>
+</ul>
+{% endif %}

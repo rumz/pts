@@ -3,7 +3,6 @@
 {% block content %}
 
 <div  >
-<div>
   <table  class="table table-hover table-condensed table-striped-green ">
     <thead>
         <tr >
@@ -29,20 +28,7 @@
         {% endif %}
         
   </table>
-</div>
-  <ul class="pager">
-  {% if Ticket.has_previous %}
-    <li class="previous"><a href="/alltickets?{{ query_params.urlencode }}&amp;page={{ Ticket.previous_page_number }}">&laquo; Previous</a></li>
-  {% else %}
-    <li class="previous disabled"><a href="#">&laquo; Previous</a></li>
-  {% endif %}
-  {% if Ticket.has_next %}
-    <li class="next"><a href="/alltickets?{{ query_params.urlencode }}&amp;page={{ Ticket.next_page_number }}">Next &raquo;</a></li>
-  {% else %}
-    <li class="next disabled"><a href="#">Next &raquo;</a></li>
-  {% endif %}
-</ul>
-
+  {% include "paginator.html" %}
 </div>
 
 {% endblock %}

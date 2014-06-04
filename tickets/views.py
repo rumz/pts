@@ -19,6 +19,7 @@ from .models import Comment
 from .models import User
 from .models import Employee
 from .models import Attachment
+from helpers.helpers import *
 
 from tickets.forms import LogInForm, DocumentForm
 
@@ -65,6 +66,8 @@ def closed_tickets(request):
 @login_required(login_url='/')
 def home(request, *args):
     data = {'system_name' : SYSTEM_NAME}
+    limit = 10
+    total_rows = 0
     try: 
         search = request.GET.get('seach_ticket')
         
@@ -76,24 +79,12 @@ def home(request, *args):
             ticket = Ticket.objects.extra(select = {'age':'weekdays(created::date,now()::date)'}, order_by=['-created'])
         count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
         user = User.objects.get(id=request.user.id)
-        
-        queries_without_page = request.GET.copy()
-
-        if queries_without_page.has_key('page'):
-            del queries_without_page['page']
-
-        paginator = Paginator(ticket, 20)
-        try: page = int(request.GET.get("page", '1'))
-        except ValueError: page = 1
-
-        try:
-            ticket = paginator.page(page)
-        except (InvalidPage, EmptyPage):
-            ticket = paginator.page(paginator.num_pages)
     except:
         print sys.exc_info()[0], sys.exc_info()[1]
-
-    data['Ticket'] = ticket
+        
+    data['current_offset'] = request.GET.get('offset', 0)
+    data['offset_list'] = get_offsets(total_rows, limit)        
+    data['Ticket'] = ticket[data['current_offset']: int(data['current_offset']) + limit]
     data['Category'] = co
     data['user'] = user
     data['count'] = count
@@ -101,8 +92,8 @@ def home(request, *args):
     data['state'] = args[0]
     data[args[4]] = 'active'
     data['employee'] = args[5]
+    data['total_rows'] = total_rows
     data['quick_search'] = True
-    data['query_params'] = queries_without_page
 
     return render(request, './ticket/home.html',data)
 
