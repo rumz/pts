@@ -3,12 +3,18 @@
 {% block content %}
 
 <div  >
+<div>
   <table  class="table table-hover table-condensed table-striped-green ">
     <thead>
         <tr >
             <th data-sort="string" class="col-xs-3 col-sm-1">Subject</th>
-            <th data-sort="string" class="col-xs-3 col-sm-1 ">Category</th>
-            <th data-sort="string" class="col-xs-3 col-sm-1 ">Assigned User</th>
+            {% if state == 'open_status' %}
+                <th data-sort="string" class="col-xs-3 col-sm-1 ">Description</th>
+                <th data-sort="string" class="col-xs-3 col-sm-1 ">Category</th>
+            {% else %}
+                <th data-sort="string" class="col-xs-3 col-sm-1 ">Category</th>
+                <th data-sort="string" class="col-xs-3 col-sm-1 ">Assigned User</th>
+            {% endif %}
             <th data-sort="string" class="col-xs-3 col-sm-1 ">Requester</th>
             <th class="col-xs-3 col-sm-1 ">Created</th>
             <th data-sort="int" class="col-xs-3 col-sm-1 ">Age</th>
@@ -23,7 +29,7 @@
         {% endif %}
         
   </table>
-
+</div>
   <ul class="pager">
   {% if Ticket.has_previous %}
     <li class="previous"><a href="/alltickets?{{ query_params.urlencode }}&amp;page={{ Ticket.previous_page_number }}">&laquo; Previous</a></li>
