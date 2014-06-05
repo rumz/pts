@@ -19,6 +19,7 @@ from .models import Comment
 from .models import User
 from .models import Employee
 from .models import Attachment
+from .forms  import ChangePass
 
 from tickets.forms import LogInForm, DocumentForm
 
@@ -39,6 +40,7 @@ def ticketing_login(request, *args):
            if Employee.objects.filter(user_id=request.user.id).exists():
                 employee = Employee.objects.get(user_id=request.user.id)
                 request.session['is_logged_in'] = True
+                request.session['user'] = {'id':user.id, 'userID': user.username, 'firstname':user.first_name, 'lastname':user.last_name}
                 return home(request, 'open_status','','',False, 'home', employee)
            else:
                 return HttpResponseRedirect('/')
@@ -525,3 +527,36 @@ def get_offsets(total_rows, limit):
                             'name'  : 'offset_'+str(offset)})
         offset = offset + limit
     return offset_list
+
+def account_settings(request):
+  data = {'form' : ChangePass(),
+          'system_name' : SYSTEM_NAME
+  }
+  user = request.session['user']
+  if request.method == 'POST':
+    change_pass = ChangePass(request.POST) # chnge passsword form
+    if change_pass.is_valid:
+      cur_pass = request.POST['current_password']
+      new_pass = request.POST['new_password']
+      conf_pass = request.POST['confirm_password']
+      current_user = User.objects.get(id=user['id'])
+      if current_user.check_password(cur_pass):
+        current_user.set_password(new_pass)
+        current_user.save()
+        data['success_message'] = 'Your password was succesfully updated'
+        return render(request, 'settings.html', data)
+      elif new_pass != conf_pass:
+        data['form'] = change_pass
+        data['error_message'] = "Password confirmation does not match to your New password"
+        return render(request, 'settings.html', data)
+      else:
+        data['form'] = change_pass
+        data['error_message'] = "Current password doesn't match to your password"
+        return render(request, 'settings.html', data)
+    else:
+      data['form'] = change_pass
+      data['errors'] = change_pass.errors
+      return render(request, 'settings.html', data)
+  else:
+    data['form'] = ChangePass()
+    return render(request, 'settings.html', data)

@@ -24,7 +24,9 @@ from tickets.views import (
     all_tickets,
     closed_tickets,
     advance_search,
-    advance_search_ticket
+    advance_search_ticket,
+    account_settings
+
 	)
 # CategoryList, , about, user_login,
 
@@ -53,6 +55,7 @@ urlpatterns = patterns('',
     url(r'closedtickets$',closed_tickets),
     url(r'advance_search$',advance_search),
     url(r'^advance_search_ticket?',advance_search_ticket),
+    url(r'^settings$', account_settings),
     url(r'^logout/$',logout, {'next_page':'/'} )
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

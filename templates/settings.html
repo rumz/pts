@@ -1,0 +1,45 @@
+{% extends 'ticket/base.html' %}
+{% load staticfiles %}
+{% block content %}
+<content>
+  <div class="container">
+    <div class="row">
+      <h2>Settings</h2>
+      {% if error_message %}
+      <p class="alert alert-danger">{{ error_message }}</p>
+      {% endif %}
+      {% if success_message %}
+      <p class="alert alert-success">{{ success_message }}</p>
+      {% endif %}
+      <h3>Change Password</h3>
+      <form class="form-horizontal" action="" method="POST">{% csrf_token %}
+	<div class="form-group">
+	  <label class="col-sm-2">Current Password</label>
+	  <div class="col-sm-4">
+	    {{ form.current_password }}
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="col-sm-2">New Password</label>
+	  <div class="col-sm-4">
+	    {{ form.new_password }}
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="col-sm-2">Confirm Password</label>
+	  <div class="col-sm-4">
+	    {{ form.confirm_password }}
+	  </div>
+	</div>
+	<div class="form-group">
+	  <div class="col-sm-2 col-sm-offset-2">
+	    <input type="submit" class="btn btn-primary" name="submit" value="Change Password">
+	  </div>
+	</div>
+      </form>
+    </div>
+  </div>
+</content>
+{% endblock content %}

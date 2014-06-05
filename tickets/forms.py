@@ -23,3 +23,27 @@ class DocumentForm(forms.Form):
         label='Select a file'
     )
 
+class ChangePass(forms.Form):
+        current_password = forms.CharField(required=True,
+                                           widget = forms.PasswordInput(attrs={
+                                                   'class':'form-control',
+                                                   'placeholder':'Current Password',
+                                                   'required':'True'
+                                           }),
+        )
+
+        new_password = forms.CharField(required=True,
+                                           widget = forms.PasswordInput(attrs={
+                                                   'class':'form-control',
+                                                   'placeholder':'New Password',
+                                                   'required':'True'
+                                           }),
+        )
+
+        confirm_password = forms.CharField(required=True,
+                                           widget = forms.PasswordInput(attrs={
+                                                   'class':'form-control',
+                                                   'placeholder':'Confirm Password',
+                                                   'required':'True'
+                                           }),
+        )
