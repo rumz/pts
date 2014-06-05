@@ -528,7 +528,7 @@ def get_offsets(total_rows, limit):
         offset = offset + limit
     return offset_list
 
-def account_settings(request):
+def change_password(request):
   data = {'form' : ChangePass(),
           'system_name' : SYSTEM_NAME
   }
@@ -544,19 +544,19 @@ def account_settings(request):
         current_user.set_password(new_pass)
         current_user.save()
         data['success_message'] = 'Your password was succesfully updated'
-        return render(request, 'settings.html', data)
+        return render(request, 'change_password.html', data)
       elif new_pass != conf_pass:
         data['form'] = change_pass
         data['error_message'] = "Password confirmation does not match to your New password"
-        return render(request, 'settings.html', data)
+        return render(request, 'change_password.html', data)
       else:
         data['form'] = change_pass
         data['error_message'] = "Current password doesn't match to your password"
-        return render(request, 'settings.html', data)
+        return render(request, 'change_password.html', data)
     else:
       data['form'] = change_pass
       data['errors'] = change_pass.errors
-      return render(request, 'settings.html', data)
+      return render(request, 'change_password.html', data)
   else:
     data['form'] = ChangePass()
-    return render(request, 'settings.html', data)
+    return render(request, 'change_password.html', data)
