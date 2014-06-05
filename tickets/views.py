@@ -78,7 +78,7 @@ def home(request, *args):
     count = Ticket.objects.filter(flag=True,assigned=request.user.id).count()
     user = User.objects.get(id=request.user.id)
     
-        
+
     data['current_offset'] = request.GET.get('offset', 0)
     data['offset_list'] = get_offsets(total_rows, limit)        
     data['Ticket'] = ticket[data['current_offset']: int(data['current_offset']) + limit]
@@ -87,8 +87,12 @@ def home(request, *args):
     data['datetime'] = datetime.datetime.now()
     data['state'] = args[0]
     data[args[4]] = 'active'
+    data['offset_'+str(request.GET.get('offset', 0) )] = 'active'
     data['employee'] = args[5]
     data['quick_search'] = True
+    print request.GET.get('offset_15')
+    print request.GET.get('offset', 0)
+    print request.GET.get('offset', 0)
 
     return render(request, './ticket/home.html',data)
 
@@ -517,6 +521,7 @@ def get_offsets(total_rows, limit):
     offset = 0
     for i in range(pages):
         offset_list.append({'page_num': (i+1),
-                            'offset'  : offset})
+                            'offset'  : offset,
+                            'name'  : 'offset_'+str(offset)})
         offset = offset + limit
     return offset_list
