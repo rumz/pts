@@ -35,6 +35,9 @@ class Employee(models.Model):
     def __unicode__(self):
         return self.user.username
 
+    def full_name(self):
+        return (self.user.last_name + ', ' + self.user.first_name)[:30]
+
 
 class Ticket(TimeStampedModel):
     subject = models.CharField(max_length=200)
@@ -51,7 +54,7 @@ class Ticket(TimeStampedModel):
         db_table = 'ticket'
 
     def __unicode__(self):
-        return self.id
+        return self.subject
 
     def get_absolute_url(self):
         return reverse('tickets-detail', kwargs={'pk': self.id})
